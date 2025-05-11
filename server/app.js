@@ -11,6 +11,10 @@ app.use(express.json());
 const apiRouter = require('./routes/api');
 app.use('/api', apiRouter);
 
+const campusRoutes = require('./routes/campusRoutes');
+app.use('/api/campuses', campusRoutes);
+
+
 // Iniciar servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
