@@ -34,7 +34,7 @@ CREATE TABLE Computer (
     cpu VARCHAR(100),
     ram VARCHAR(50),
     storage VARCHAR(50),
-    status ENUM('Disponível', 'Fora de serviço', 'Em reparo') NOT NULL,
+    status ENUM('disponivel', 'fora de servico', 'em reparo') NOT NULL,
     FOREIGN KEY (lab_id) REFERENCES Laboratory(lab_id)
 );
 
@@ -44,7 +44,7 @@ CREATE TABLE User (
     campus_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    role ENUM('Administrador', 'Professor', 'Estudante', 'Técnico') NOT NULL,
+    role ENUM('administrador', 'professor', 'estudante', 'tecnico') NOT NULL,
     FOREIGN KEY (campus_id) REFERENCES Campus(campus_id)
 );
 
@@ -59,7 +59,7 @@ CREATE TABLE ScheduleSlot (
 CREATE TABLE LabSchedule (
     lab_id INT NOT NULL,
     slot_id INT NOT NULL,
-    day_of_week ENUM('Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta') NOT NULL,
+    day_of_week ENUM('seg', 'ter', 'qua', 'qui', 'sex') NOT NULL,
     discipline VARCHAR(100),
     teacher VARCHAR(100),
     status ENUM('Reservado', 'Livre') NOT NULL,
@@ -82,7 +82,7 @@ CREATE TABLE LabProgramRequest (
     requested_by INT NOT NULL,
     program_name VARCHAR(100) NOT NULL,
     version VARCHAR(50) NOT NULL,
-    status ENUM('Pendente', 'Instalado', 'Negado') NOT NULL,
+    status ENUM('pendente', 'instalado', 'negado') NOT NULL,
     request_date DATE NOT NULL,
     FOREIGN KEY (lab_id) REFERENCES Laboratory(lab_id),
     FOREIGN KEY (requested_by) REFERENCES User(user_id)
@@ -105,7 +105,7 @@ CREATE TABLE ComputerIssue (
     reported_by INT NOT NULL,
     description TEXT NOT NULL,
     date_reported DATE NOT NULL,
-    status ENUM('Aberto', 'Em andamento', 'Resolvido') NOT NULL,
+    status ENUM('aberto', 'em andamento', 'resolvido') NOT NULL,
     component ENUM('Monitor', 'mouse', 'teclado', 'gabinete', 'outros') NOT NULL,
     FOREIGN KEY (computer_id) REFERENCES Computer(computer_id),
     FOREIGN KEY (reported_by) REFERENCES User(user_id)
@@ -117,7 +117,7 @@ CREATE TABLE MaintenanceRequest (
     computer_id INT NOT NULL,
     description TEXT NOT NULL,
     requested_by INT NOT NULL,
-    status ENUM('Pendente', 'Em reparo', 'Concluído') NOT NULL,
+    status ENUM('pendente', 'em reparo', 'concluido') NOT NULL,
     created_at DATETIME NOT NULL,
     FOREIGN KEY (computer_id) REFERENCES Computer(computer_id),
     FOREIGN KEY (requested_by) REFERENCES User(user_id)
