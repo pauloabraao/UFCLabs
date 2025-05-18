@@ -45,6 +45,9 @@ app.use('/api/computerissues', computerIssueRoutes);
 const maintenanceRequestRoutes = require('./routes/maintenanceRequestRoutes');
 app.use('/api/maintenancerequests', maintenanceRequestRoutes);
 
+const userRoutes = require('./routes/userRoutes');
+app.use('/api/users', userRoutes);
+
 // Test DB connection on startup
 db.authenticate()
   .then(() => console.log('DB connection OK'))
