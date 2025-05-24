@@ -1,11 +1,13 @@
-import { Container, Typography, Box } from '@mui/material';
+import { Container, Typography, Box, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import MainNavbar from '../components/MainNavbar';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function HomePage() {
   const [campuses, setCampuses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get('http://localhost:3000/api/campuses')
@@ -13,6 +15,10 @@ export default function HomePage() {
       .catch(() => setCampuses([]))
       .finally(() => setLoading(false));
   }, []);
+
+  const handleCampusClick = (campusId) => {
+    navigate(`/campuses/${campusId}/blocks`);
+  };
 
   return (
     <>
@@ -31,18 +37,18 @@ export default function HomePage() {
           {loading ? (
             <Typography>Carregando...</Typography>
           ) : (
-            <ul style={{ listStyle: 'none', padding: 0 }}>
+            <List>
               {campuses.map(campus => (
-                <li key={campus.campus_id}>
-                  <Typography>
-                    {campus.name} - {campus.location}
-                  </Typography>
-                </li>
+                <ListItem key={campus.campus_id} disablePadding>
+                  <ListItemButton onClick={() => handleCampusClick(campus.campus_id)}>
+                    <ListItemText primary={`${campus.name} - ${campus.location}`} />
+                  </ListItemButton>
+                </ListItem>
               ))}
               {campuses.length === 0 && (
                 <Typography>Nenhum campus encontrado.</Typography>
               )}
-            </ul>
+            </List>
           )}
         </Box>
       </Container>

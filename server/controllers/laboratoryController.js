@@ -2,7 +2,11 @@ const Laboratory = require('../models/Laboratory');
 
 exports.getAllLaboratories = async (req, res) => {
   try {
-    const labs = await Laboratory.findAll();
+    const where = {};
+    if (req.query.block_id) {
+      where.block_id = req.query.block_id;
+    }
+    const labs = await Laboratory.findAll({ where });
     res.json(labs);
   } catch (error) {
     res.status(500).json({ error: error.message });

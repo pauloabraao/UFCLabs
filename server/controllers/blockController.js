@@ -2,7 +2,11 @@ const Block = require('../models/Block');
 
 exports.getAllBlocks = async (req, res) => {
   try {
-    const blocks = await Block.findAll();
+    const where = {};
+    if (req.query.campus_id) {
+      where.campus_id = req.query.campus_id;
+    }
+    const blocks = await Block.findAll({ where });
     res.json(blocks);
   } catch (error) {
     res.status(500).json({ error: error.message });

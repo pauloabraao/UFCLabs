@@ -2,7 +2,11 @@ const Computer = require('../models/Computer');
 
 exports.getAllComputers = async (req, res) => {
   try {
-    const computers = await Computer.findAll();
+    const where = {};
+    if (req.query.lab_id) {
+      where.lab_id = req.query.lab_id;
+    }
+    const computers = await Computer.findAll({ where });
     res.json(computers);
   } catch (error) {
     res.status(500).json({ error: error.message });
