@@ -5,6 +5,7 @@ import ComputerCard from "../components/ComputerCard";
 import AddComputerModal from "../components/AddComputerModal";
 import EditComputerModal from "../components/EditComputerModal";
 import ComputersHeader from "../components/ComputersHeader";
+import ScheduleLabModal from "../components/ScheduleLabModal";
 import { Container, Typography } from "@mui/material";
 import './ComputersPage.css';
 
@@ -130,51 +131,15 @@ function ComputersPage() {
         computer={computerToEdit}
         onEditComputer={handleEditComputer}
       />
-      {/* LabSchedule Modal */}
       {isScheduleOpen && (
-        <div className="modal" onClick={handleCloseSchedule}>
-          <div className="modal-conteudo" onClick={e => e.stopPropagation()}>
-            <span className="fechar" onClick={handleCloseSchedule}>&times;</span>
-            <h2>Horário do Laboratório</h2>
-            {scheduleLoading ? (
-              <p>Carregando...</p>
-            ) : (
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                <thead>
-                  <tr>
-                    <th>Dia</th>
-                    <th>Horário</th>
-                    <th>Disciplina</th>
-                    <th>Professor</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {labSchedule.length === 0 ? (
-                    <tr>
-                      <td colSpan={5}>Nenhum horário cadastrado.</td>
-                    </tr>
-                  ) : (
-                    labSchedule.map((item, idx) => (
-                      <tr key={idx}>
-                        <td>{item.day_of_week}</td>
-                        <td>
-                          {(item.start_time && item.end_time)
-                            ? `${item.start_time} - ${item.end_time}`
-                            : `Slot ${item.slot_id}`}
-                        </td>
-                        <td>{item.discipline || "-"}</td>
-                        <td>{item.teacher || "-"}</td>
-                        <td>{item.status}</td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            )}
-          </div>
-        </div>
-      )}
+  <ScheduleLabModal
+    isOpen={isScheduleOpen}
+    onClose={handleCloseSchedule}
+    schedule={labSchedule}
+    loading={scheduleLoading}
+  />
+)}
+
     </>
   );
 }

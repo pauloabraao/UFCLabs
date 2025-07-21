@@ -18,7 +18,8 @@ function ComputerCard({ computer, onClick }) {
       onClick={onClick}
       style={{ cursor: onClick ? "pointer" : undefined }}
     >
-      <h3>{computer.computer_id} - {computer.os || "Sem SO"}</h3>
+      <h3>PC {computer.computer_id}</h3>
+      <p>SO: {computer.os || "Sem SO"}</p>
       <p>Status: {computer.status}</p>
       <p>CPU: {computer.cpu}</p>
       <p>RAM: {computer.ram}</p>
