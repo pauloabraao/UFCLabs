@@ -16,7 +16,7 @@ config = {
     'user': 'root',
     'password': 'dbadmin08',
     'host': 'localhost',
-    'database': 'labssystem'
+    'database': 'LabsSystem'
 }
 
 def connect_to_db():
