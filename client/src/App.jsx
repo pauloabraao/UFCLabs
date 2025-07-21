@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import HomePage from "./pages/HomePage";
+import ReportPage from './pages/ReportPage';
 import BlocksPage from "./pages/BlocksPage";
 import LabsPage from "./pages/LabsPage";
 import ComputersPage from "./pages/ComputersPage";
@@ -16,6 +17,8 @@ function App() {
         <div className="container">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/report" element={<ReportPage />} />
+            <Route path="/labs" element={<LabsPage />} />
             <Route path="/campuses/:campusId/blocks" element={<BlocksPage />} />
             <Route path="/blocks/:blockId/labs" element={<LabsPage />} />
             <Route path="/labs/:labId/computers" element={<ComputersPage />} />
