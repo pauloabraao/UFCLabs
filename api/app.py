@@ -93,34 +93,6 @@ def generate_eda_report():
         pdf.savefig()
         plt.close()
 
-        # ---------- GRÁFICO 1: Distribuição de Computadores por Status ----------
-        cursor.execute("SELECT status, COUNT(*) FROM Computer GROUP BY status")
-        data = cursor.fetchall()
-        statuses, counts = zip(*data)
-        plt.figure(figsize=(A4_WIDTH, A4_HEIGHT))
-        plt.title("Distribuição de Computadores por Status", fontsize=16)
-        plt.bar(statuses, counts, color='skyblue')
-        plt.xlabel("Status")
-        plt.ylabel("Quantidade")
-        plt.grid(axis='y')
-        pdf.savefig()
-        plt.close()
-
-        # ---------- GRÁFICO 3: Ocorrência de Problemas por Componente ----------
-        cursor.execute("""
-            SELECT component, COUNT(*) 
-            FROM ComputerIssue 
-            GROUP BY component
-        """)
-        data = cursor.fetchall()
-        components, issue_counts = zip(*data)
-        plt.figure(figsize=(A4_WIDTH, A4_HEIGHT))
-        plt.title("Ocorrências de Problemas por Componente", fontsize=16)
-        plt.pie(issue_counts, labels=components, autopct='%1.1f%%', startangle=90)
-        plt.axis('equal')
-        pdf.savefig()
-        plt.close()
-
     conn.close()
     buffer.seek(0)
     return buffer, pdf_filename
