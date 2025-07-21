@@ -16,7 +16,7 @@ config = {
     'user': 'root',
     'password': 'dbadmin08',
     'host': 'localhost',
-    'database': 'LabsSystem'
+    'database': 'labssystem'
 }
 
 def connect_to_db():
@@ -90,6 +90,34 @@ def generate_eda_report():
         table.set_fontsize(12)
         table.scale(1.2, 1.5)  # Width, Height of cells
 
+        pdf.savefig()
+        plt.close()
+
+        # ---------- GRÁFICO 1: Distribuição de Computadores por Status ----------
+        cursor.execute("SELECT status, COUNT(*) FROM Computer GROUP BY status")
+        data = cursor.fetchall()
+        statuses, counts = zip(*data)
+        plt.figure(figsize=(A4_WIDTH, A4_HEIGHT))
+        plt.title("Distribuição de Computadores por Status", fontsize=16)
+        plt.bar(statuses, counts, color='skyblue')
+        plt.xlabel("Status")
+        plt.ylabel("Quantidade")
+        plt.grid(axis='y')
+        pdf.savefig()
+        plt.close()
+
+        # ---------- GRÁFICO 3: Ocorrência de Problemas por Componente ----------
+        cursor.execute("""
+            SELECT component, COUNT(*) 
+            FROM ComputerIssue 
+            GROUP BY component
+        """)
+        data = cursor.fetchall()
+        components, issue_counts = zip(*data)
+        plt.figure(figsize=(A4_WIDTH, A4_HEIGHT))
+        plt.title("Ocorrências de Problemas por Componente", fontsize=16)
+        plt.pie(issue_counts, labels=components, autopct='%1.1f%%', startangle=90)
+        plt.axis('equal')
         pdf.savefig()
         plt.close()
 
