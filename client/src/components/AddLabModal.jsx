@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
 function AddLabModal({ isOpen, onClose, onAddLab }) {
-  const [nomeLab, setNomeLab] = useState('');
-  const [capacidade, setCapacidade] = useState('');
+  const [name, setName] = useState('');
+  const [capacity, setCapacity] = useState('');
   const [num_computers, setNumComputers] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    onAddLab({ name: nomeLab, capacity: capacidade, num_computers: num_computers });
-    setNomeLab('');
-    setCapacidade('');
+    onAddLab({ name, capacity, num_computers });
+    setName('');
+    setCapacity('');
     setNumComputers('');
     onClose();
   };
@@ -29,8 +29,8 @@ function AddLabModal({ isOpen, onClose, onAddLab }) {
             <input
               type="text"
               id="nome-lab"
-              value={nomeLab}
-              onChange={(e) => setNomeLab(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Laboratório de Redes"
               required
             />
@@ -41,8 +41,8 @@ function AddLabModal({ isOpen, onClose, onAddLab }) {
             <input
               type="number"
               id="capacidade"
-              value={capacidade}
-              onChange={(e) => setCapacidade(e.target.value)}
+              value={capacity}
+              onChange={(e) => setCapacity(e.target.value)}
               placeholder="Ex: 30"
               required
             />

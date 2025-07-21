@@ -22,7 +22,7 @@ body {
     align-items: center;
     gap: 1rem;
     width: 100%;
-    padding: 0 2rem;
+    padding: 2rem 2rem;
 }
 
 .header-left,
@@ -87,7 +87,7 @@ body {
 }
 
 .lab-card {
-    background-color: #fff;
+    background-color: #efefef;
     padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);

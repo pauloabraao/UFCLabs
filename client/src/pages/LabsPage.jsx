@@ -63,8 +63,8 @@ function LabsPage() {
   const handleAddLab = (novoLab) => {
     axios.post('http://localhost:3000/api/laboratories', {
       block_id: parseInt(selectedBlockId),
-      name: novoLab.nome,
-      capacity: parseInt(novoLab.capacidade),
+      name: novoLab.name,
+      capacity: parseInt(novoLab.capacity),
       num_computers: novoLab.num_computers
     })
       .then(res => {
