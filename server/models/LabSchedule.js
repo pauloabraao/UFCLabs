@@ -7,8 +7,8 @@ const LabSchedule = db.define('LabSchedule', {
     primaryKey: true,
     allowNull: false
   },
-  slot_id: {
-    type: DataTypes.INTEGER,
+  time: {
+    type: DataTypes.ENUM('08:00 - 10:00', '10:00 - 12: 00', '13:30 - 15:30', '15:30 - 17:30', '18:00 - 20:00', '20:00 - 22:00'),
     primaryKey: true,
     allowNull: false
   },
