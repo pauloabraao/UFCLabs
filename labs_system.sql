@@ -29,6 +29,8 @@ CREATE TABLE Laboratory (
 -- Computer
 CREATE TABLE Computer (
     computer_id INT AUTO_INCREMENT PRIMARY KEY,
+    number_id INT NOT NULL,
+    property_id VARCHAR(30) UNIQUE,
     lab_id INT NOT NULL,
     os VARCHAR(100),
     cpu VARCHAR(100),
@@ -44,30 +46,21 @@ CREATE TABLE User (
     campus_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    password_user VARCHAR(100) NOT NULL,
     role ENUM('administrador', 'professor', 'estudante', 'tecnico') NOT NULL,
     FOREIGN KEY (campus_id) REFERENCES Campus(campus_id)
-);
- 
-
--- ScheduleSlot
-CREATE TABLE ScheduleSlot (
-    slot_id INT AUTO_INCREMENT PRIMARY KEY,
-    start_time TIME NOT NULL,
-    end_time TIME NOT NULL
 );
 
 -- LabSchedule
 CREATE TABLE LabSchedule (
     lab_id INT NOT NULL,
-    slot_id INT NOT NULL,
+    time ENUM('08:00 - 10:00', '10:00 - 12: 00', '13:30 - 15:30', '15:30 - 17:30', '18:00 - 20:00', '20:00 - 22:00') NOT NULL,
     day_of_week ENUM('seg', 'ter', 'qua', 'qui', 'sex') NOT NULL,
     discipline VARCHAR(100),
     teacher VARCHAR(100),
-    status ENUM('Reservado', 'Livre') NOT NULL,
-    PRIMARY KEY (lab_id, slot_id, day_of_week),
-    FOREIGN KEY (lab_id) REFERENCES Laboratory(lab_id),
-    FOREIGN KEY (slot_id) REFERENCES ScheduleSlot(slot_id)
+    status ENUM('reservado', 'livre') NOT NULL,
+    PRIMARY KEY (lab_id, time, day_of_week),
+    FOREIGN KEY (lab_id) REFERENCES Laboratory(lab_id)
 );
 
 -- Program
@@ -108,7 +101,7 @@ CREATE TABLE ComputerIssue (
     description TEXT NOT NULL,
     date_reported DATE NOT NULL,
     status ENUM('aberto', 'em andamento', 'resolvido') NOT NULL,
-    component ENUM('Monitor', 'mouse', 'teclado', 'gabinete', 'outros') NOT NULL,
+    component ENUM('monitor', 'mouse', 'teclado', 'gabinete', 'internet', 'outros') NOT NULL,
     FOREIGN KEY (computer_id) REFERENCES Computer(computer_id),
     FOREIGN KEY (reported_by) REFERENCES User(user_id)
 );
@@ -123,6 +116,6 @@ CREATE TABLE MaintenanceRequest (
     created_at DATETIME NOT NULL,
     FOREIGN KEY (computer_id) REFERENCES Computer(computer_id),
     FOREIGN KEY (requested_by) REFERENCES User(user_id)
-    -- Observação: a filtragem por role (Técnico ou Administrador) deverá ser feita via lógica de aplicação
 );
+
 
