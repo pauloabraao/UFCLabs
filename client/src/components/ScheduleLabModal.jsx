@@ -1,8 +1,41 @@
-// src/components/ScheduleLabModal.jsx
 import React from "react";
+import "../pages/ComputersPage.css";
 
 function ScheduleLabModal({ isOpen, onClose, schedule, loading }) {
   if (!isOpen) return null;
+
+  const diasSemana = ["seg", "ter", "qua", "qui", "sex"];
+  const horarios = [
+    "08:00 - 10:00",
+    "10:00 - 12:00",
+    "13:30 - 15:30",
+    "15:30 - 17:30",
+    "18:00 - 20:00",
+    "20:00 - 22:00",
+  ];
+
+  // Organiza os dados por horário e dia
+  const tabela = {};
+  horarios.forEach((horario) => {
+    tabela[horario] = {};
+    diasSemana.forEach((dia) => {
+      tabela[horario][dia] = null;
+    });
+  });
+
+  schedule.forEach((item) => {
+    if (tabela[item.time] && tabela[item.time][item.day_of_week]) {
+      tabela[item.time][item.day_of_week] = {
+        disciplina: item.discipline,
+        professor: item.teacher,
+      };
+    } else if (tabela[item.time]) {
+      tabela[item.time][item.day_of_week] = {
+        disciplina: item.discipline,
+        professor: item.teacher,
+      };
+    }
+  });
 
   return (
     <div className="modal" onClick={onClose}>
@@ -14,38 +47,38 @@ function ScheduleLabModal({ isOpen, onClose, schedule, loading }) {
         {loading ? (
           <p>Carregando...</p>
         ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <table className="schedule-table">
             <thead>
               <tr>
-                <th>Dia</th>
                 <th>Horário</th>
-                <th>Disciplina</th>
-                <th>Professor</th>
-                <th>Status</th>
+                {diasSemana.map((dia) => (
+                  <th key={dia}>{dia.charAt(0).toUpperCase() + dia.slice(1)}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              {schedule.length === 0 ? (
-                <tr>
-                  <td colSpan={5}>Nenhum horário cadastrado.</td>
+              {horarios.map((horario) => (
+                <tr key={horario}>
+                  <td>{horario}</td>
+                  {diasSemana.map((dia) => {
+                    const celula = tabela[horario][dia];
+                    return (
+                      <td key={dia}>
+                        {celula && celula.disciplina && (
+                          <>
+                            <strong>{celula.disciplina}</strong>
+                            <br />
+                            <small>{celula.professor}</small>
+                          </>
+                        )}
+                      </td>
+                    );
+                  })}
                 </tr>
-              ) : (
-                schedule.map((item, idx) => (
-                  <tr key={idx}>
-                    <td>{item.day_of_week}</td>
-                    <td>
-                      {item.start_time && item.end_time
-                        ? `${item.start_time} - ${item.end_time}`
-                        : `Slot ${item.slot_id}`}
-                    </td>
-                    <td>{item.discipline || "-"}</td>
-                    <td>{item.teacher || "-"}</td>
-                    <td>{item.status}</td>
-                  </tr>
-                ))
-              )}
+              ))}
             </tbody>
           </table>
+        
         )}
       </div>
     </div>
