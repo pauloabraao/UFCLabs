@@ -122,7 +122,7 @@ function ComputersPage() {
                 <ComputerCard
                   key={computer.computer_id}
                   computer={computer}
-                  onClick={() => handleCardClick(computer)}
+                  onEdit={handleCardClick}
                 />
               ))}
               {computers.length === 0 && (

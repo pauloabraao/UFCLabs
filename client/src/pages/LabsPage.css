@@ -96,6 +96,7 @@ body {
     height: 200px;
     display: flexbox;
     align-items: flex-start;
+    position: relative;
 }
 
 .lab-card.occupied:hover {
@@ -208,4 +209,18 @@ body {
 .btn-submit {
     background-color: #2563eb;
     color: #fff;
+}
+
+/* Edit and delete buttons in lab card */
+.lab-edit-btn, .lab-delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+.lab-edit-btn:hover, .lab-delete-btn:hover {
+    opacity: 1;
 }
