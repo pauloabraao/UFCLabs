@@ -70,6 +70,17 @@ function ComputersPage() {
       .catch(() => alert("Erro ao editar computador."));
   };
 
+  const handleDeleteComputer = (computer) => {
+    axios
+      .delete(`http://localhost:3000/api/computers/${computer.computer_id}`)
+      .then(() => {
+        setComputers(computers.filter(c => c.computer_id !== computer.computer_id));
+        setEditModalOpen(false);
+        setComputerToEdit(null);
+      })
+      .catch(() => alert("Erro ao excluir computador."));
+  };
+
   const handleLogout = () => {
     if (window.confirm("Você tem certeza que deseja sair?")) {
       navigate("/");
@@ -130,6 +141,7 @@ function ComputersPage() {
         onClose={() => setEditModalOpen(false)}
         computer={computerToEdit}
         onEditComputer={handleEditComputer}
+        onDeleteComputer={handleDeleteComputer}
       />
       {isScheduleOpen && (
   <ScheduleLabModal

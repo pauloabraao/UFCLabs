@@ -8,6 +8,7 @@ import "../pages/ComputersPage.css";
 
 // Modal for adding a computer
 function AddComputerModal({ isOpen, onClose, onAddComputer }) {
+  const [numberId, setNumberId] = useState("");
   const [os, setOs] = useState("");
   const [cpu, setCpu] = useState("");
   const [ram, setRam] = useState("");
@@ -16,7 +17,8 @@ function AddComputerModal({ isOpen, onClose, onAddComputer }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAddComputer({ os, cpu, ram, storage, status });
+    onAddComputer({ number_id: parseInt(numberId), os, cpu, ram, storage, status });
+    setNumberId("");
     setOs("");
     setCpu("");
     setRam("");
@@ -38,6 +40,17 @@ function AddComputerModal({ isOpen, onClose, onAddComputer }) {
         </span>
         <h2>Adicionar Novo Computador</h2>
         <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="number-id">Número do Computador</label>
+            <input
+              type="number"
+              id="number-id"
+              value={numberId}
+              onChange={(e) => setNumberId(e.target.value)}
+              placeholder="Ex: 1"
+              required
+            />
+          </div>
           <div className="form-group">
             <label htmlFor="os">Sistema Operacional</label>
             <input
