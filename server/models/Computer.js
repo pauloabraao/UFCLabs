@@ -11,6 +11,10 @@ const Computer = db.define('Computer', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  number_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
   os: {
     type: DataTypes.STRING(100)
   },
