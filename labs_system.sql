@@ -54,7 +54,7 @@ CREATE TABLE User (
 -- LabSchedule
 CREATE TABLE LabSchedule (
     lab_id INT NOT NULL,
-    time ENUM('08:00 - 10:00', '10:00 - 12: 00', '13:30 - 15:30', '15:30 - 17:30', '18:00 - 20:00', '20:00 - 22:00') NOT NULL,
+    time ENUM('08:00 - 10:00', '10:00 - 12:00', '13:30 - 15:30', '15:30 - 17:30', '18:00 - 20:00', '20:00 - 22:00') NOT NULL,
     day_of_week ENUM('seg', 'ter', 'qua', 'qui', 'sex') NOT NULL,
     discipline VARCHAR(100),
     teacher VARCHAR(100),
