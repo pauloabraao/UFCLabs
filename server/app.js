@@ -8,6 +8,12 @@ import swaggerSpec from './swaggerConfig.js';
 
 const app = express();
 
+// Check for essential environment variables
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL ERROR: JWT_SECRET is not defined in the .env file.');
+  process.exit(1);
+}
+
 // Middlewares
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
