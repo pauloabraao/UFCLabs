@@ -4,14 +4,13 @@ import LabGrid from '../components/LabGrid';
 import AddLabModal from '../components/AddLabModal';
 import EditLabModal from '../components/EditLabModal';
 import './LabsPage.css';
-import axios from 'axios';
-import { useParams, useNavigate } from "react-router-dom";
+import api from '../utils/api'; // Usar a instância do axios configurada
+import { useParams } from "react-router-dom";
 import { Typography } from "@mui/material";
 import getUserInfo from '../utils/getUserInfo'; // Importa o utilitário
 
 function LabsPage() {
-  const { blockId } = useParams();
-  const navigate = useNavigate();
+  const { blockId } = useParams(); // blockId da URL, se houver
   const [labs, setLabs] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -30,7 +29,7 @@ function LabsPage() {
 
   // Fetch campuses on mount
   useEffect(() => {
-    axios.get('http://localhost:3000/api/campuses')
+    api.get('/campuses')
       .then(res => setCampuses(res.data))
       .catch(() => setCampuses([]));
   }, []);
@@ -38,7 +37,7 @@ function LabsPage() {
   // Fetch blocks when campus changes
   useEffect(() => {
     if (selectedCampusId) {
-      axios.get(`http://localhost:3000/api/blocks?campus_id=${selectedCampusId}`)
+      api.get(`/blocks?campus_id=${selectedCampusId}`)
         .then(res => setBlocks(res.data))
         .catch(() => setBlocks([]));
     } else {
@@ -51,7 +50,7 @@ function LabsPage() {
   useEffect(() => {
     if (selectedBlockId) {
       setLoading(true);
-      axios.get(`http://localhost:3000/api/laboratories?block_id=${selectedBlockId}`)
+      api.get(`/laboratories?block_id=${selectedBlockId}`)
         .then(res => setLabs(res.data))
         .catch(() => setLabs([]))
         .finally(() => setLoading(false));
@@ -69,7 +68,7 @@ function LabsPage() {
   }, [blockId]);
 
   const handleAddLab = (novoLab) => {
-    axios.post('http://localhost:3000/api/laboratories', {
+    api.post('/laboratories', {
       block_id: parseInt(selectedBlockId),
       name: novoLab.name,
       capacity: parseInt(novoLab.capacity),
@@ -86,7 +85,6 @@ function LabsPage() {
   };
 
   const handleOpenModal = () => {
-    //setIsModalOpen(true);
     // Garante que apenas administradores possam abrir o modal
     if (isAdmin) {
       setIsModalOpen(true);
@@ -94,8 +92,7 @@ function LabsPage() {
   };
 
   const handleCloseModal = () => {
-    //setIsModalOpen(false);
-    isAdmin={isAdmin} // Passa a flag para o Header
+    setIsModalOpen(false);
   };
 
   // Edit handlers
@@ -110,7 +107,7 @@ function LabsPage() {
   };
 
   const handleUpdateLab = (updatedLab) => {
-    axios.put(`http://localhost:3000/api/laboratories/${updatedLab.lab_id}`, updatedLab)
+    api.put(`/laboratories/${updatedLab.lab_id}`, updatedLab)
       .then(res => {
         setLabs(labs.map(l => l.lab_id === updatedLab.lab_id ? res.data : l));
         setIsEditModalOpen(false);
@@ -121,7 +118,7 @@ function LabsPage() {
 
   const handleDeleteLab = (lab) => {
     if (window.confirm(`Tem certeza que deseja excluir o laboratório "${lab.name}"? Esta ação não pode ser desfeita.`)) {
-      axios.delete(`http://localhost:3000/api/laboratories/${lab.lab_id}`)
+      api.delete(`/laboratories/${lab.lab_id}`)
         .then(() => {
           setLabs(labs.filter(l => l.lab_id !== lab.lab_id));
           setIsEditModalOpen(false);
@@ -156,6 +153,7 @@ function LabsPage() {
         selectedBlockId={selectedBlockId}
         onCampusChange={handleCampusChange}
         onBlockChange={handleBlockChange}
+        isAdmin={isAdmin}
       />
       <main className="main-content">
         {loading ? (
