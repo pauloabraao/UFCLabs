@@ -7,6 +7,7 @@ import './LabsPage.css';
 import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom";
 import { Typography } from "@mui/material";
+import getUserInfo from '../utils/getUserInfo'; // Importa o utilitário
 
 function LabsPage() {
   const { blockId } = useParams();
@@ -16,6 +17,10 @@ function LabsPage() {
   const [loading, setLoading] = useState(true);
   const [editLab, setEditLab] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  // Verifica a role do usuário a partir do token
+  const userInfo = getUserInfo();
+  const isAdmin = userInfo?.role === 'administrador';
 
   // New state for campuses and blocks
   const [campuses, setCampuses] = useState([]);
@@ -81,11 +86,16 @@ function LabsPage() {
   };
 
   const handleOpenModal = () => {
-    setIsModalOpen(true);
+    //setIsModalOpen(true);
+    // Garante que apenas administradores possam abrir o modal
+    if (isAdmin) {
+      setIsModalOpen(true);
+    }
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
+    //setIsModalOpen(false);
+    isAdmin={isAdmin} // Passa a flag para o Header
   };
 
   // Edit handlers

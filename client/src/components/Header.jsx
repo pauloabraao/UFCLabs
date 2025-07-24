@@ -8,6 +8,7 @@ function Header({
     selectedCampusId,
     selectedBlockId,
     onCampusChange,
+    isAdmin, // Nova prop para controlar a visibilidade do botão
     onBlockChange
 }) {
     const navigate = useNavigate();
@@ -56,12 +57,19 @@ function Header({
                     </div>
                 </div>
                 <div className="header-right">
-                    <button className="btn-add" onClick={() => {
+                    {/* <button className="btn-add" onClick={() => {
                         console.log("Botão 'Adicionar Laboratório' foi clicado!");
                         onOpenModal();
                     }}>
                         Laboratório <i className="fas fa-plus"></i>
-                    </button>
+                    </button> */}
+                    
+                    {/* Renderiza o botão apenas se o usuário for administrador */}
+                    {isAdmin && (
+                        <button className="btn-add" onClick={onOpenModal}>
+                            Laboratório <i className="fas fa-plus"></i>
+                        </button>
+                    )}
                     <a href="#" id="btn-logout" className="icon-btn" aria-label="Sair" onClick={handleLogout}>
                         <i className="fas fa-sign-out-alt"></i>
                     </a>
