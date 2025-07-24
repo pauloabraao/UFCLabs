@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
-const db = require('../config/db');
+import { DataTypes } from 'sequelize';
+import db from '../config/db.js';
 
 const Laboratory = db.define('Laboratory', {
   lab_id: {
@@ -28,4 +28,4 @@ const Laboratory = db.define('Laboratory', {
   timestamps: false
 });
 
-module.exports = Laboratory;
+export default Laboratory;
