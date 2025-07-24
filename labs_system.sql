@@ -46,7 +46,7 @@ CREATE TABLE User (
     campus_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password_user VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL,
     role ENUM('administrador', 'professor', 'estudante', 'tecnico') NOT NULL,
     FOREIGN KEY (campus_id) REFERENCES Campus(campus_id)
 );
