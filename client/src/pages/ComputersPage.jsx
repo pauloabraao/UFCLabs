@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import deleteCookie from "../utils/deleteCookie"; // deletar cookie
 import ComputerCard from "../components/ComputerCard";
 import AddComputerModal from "../components/AddComputerModal";
 import EditComputerModal from "../components/EditComputerModal";
@@ -83,6 +84,7 @@ function ComputersPage() {
 
   const handleLogout = () => {
     if (window.confirm("Você tem certeza que deseja sair?")) {
+      deleteCookie('token'); //deletar cookie
       navigate("/");
     }
   };
