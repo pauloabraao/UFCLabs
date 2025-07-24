@@ -1,11 +1,18 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const userController = require('../controllers/userController');
+import { getAllUsers, createUser, getUserById, updateUser, deleteUser } from '../controllers/userController.js';
+import { verifyToken, requireRole } from '../middleware/auth.js';
+import roles from '../enums/roles.js';
 
-router.get('/', userController.getAllUsers);
-router.post('/', userController.createUser);
-router.get('/:id', userController.getUserById);
-router.put('/:id', userController.updateUser);
-router.delete('/:id', userController.deleteUser);
+// Public route - anyone can create a user (registration)
+router.post('/', createUser);
 
-module.exports = router;
+// Protected routes - require authentication
+router.get('/', verifyToken, getAllUsers);
+router.get('/:id', verifyToken, getUserById);
+
+// Admin only routes - require admin role
+router.put('/:id', verifyToken, requireRole([roles.admin]), updateUser);
+router.delete('/:id', verifyToken, requireRole([roles.admin]), deleteUser);
+
+export default router;
