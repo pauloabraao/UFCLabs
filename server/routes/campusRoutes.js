@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const campusController = require('../controllers/campusController');
+import { getAllCampuses, createCampus, getCampusById, updateCampus, deleteCampus } from '../controllers/campusController.js';
 
-router.get('/', campusController.getAllCampuses);
-router.post('/', campusController.createCampus);
-router.get('/:id', campusController.getCampusById);
-router.put('/:id', campusController.updateCampus);
-router.delete('/:id', campusController.deleteCampus);
+router.get('/', getAllCampuses);
+router.post('/', createCampus);
+router.get('/:id', getCampusById);
+router.put('/:id', updateCampus);
+router.delete('/:id', deleteCampus);
 
-module.exports = router;
+export default router;
