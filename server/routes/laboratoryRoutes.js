@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const laboratoryController = require('../controllers/laboratoryController');
+import { getAllLaboratories, createLaboratory, getLaboratoryById, updateLaboratory, deleteLaboratory } from '../controllers/laboratoryController.js';
 
-router.get('/', laboratoryController.getAllLaboratories);
-router.post('/', laboratoryController.createLaboratory);
-router.get('/:id', laboratoryController.getLaboratoryById);
-router.put('/:id', laboratoryController.updateLaboratory);
-router.delete('/:id', laboratoryController.deleteLaboratory);
+router.get('/', getAllLaboratories);
+router.post('/', createLaboratory);
+router.get('/:id', getLaboratoryById);
+router.put('/:id', updateLaboratory);
+router.delete('/:id', deleteLaboratory);
 
-module.exports = router;
+export default router;
