@@ -1,8 +1,10 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const db = require('./config/db');
-const path = require('path');
+import 'dotenv/config'
+import express  from 'express';
+import cors  from 'cors';
+import swaggerUi from 'swagger-ui-express';
+import db from './config/db.js';
+import apiRouter from './routes/index.js';
+import swaggerSpec from './swaggerConfig.js';
 
 const app = express();
 
@@ -19,6 +21,20 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  explorer: true,
+  customSiteTitle: 'UFCLabs API Documentation',
+  swaggerOptions: {
+    persistAuthorization: true,
+    displayRequestDuration: true,
+    docExpansion: 'none',
+    filter: true,
+    showExtensions: true,
+    tryItOutEnabled: true
+  }
+}));
+
 // Rota de health check
 app.get('/health', (req, res) => {
   res.json({ 
@@ -33,6 +49,7 @@ app.get('/', (req, res) => {
   res.json({
     message: 'UFCLabs API',
     version: '1.0.0',
+    documentation: '/api-docs',
     endpoints: {
       campuses: '/api/campuses',
       blocks: '/api/blocks',
@@ -50,32 +67,8 @@ app.get('/', (req, res) => {
   });
 });
 
-// Função para carregar rotas com tratamento de erro
-function loadRoute(routeFile, routePath) {
-  try {
-    const route = require(path.join(__dirname, routeFile));
-    app.use(routePath, route);
-    console.log(`✅ Route loaded: ${routePath}`);
-  } catch (error) {
-    console.warn(`⚠️ Failed to load route ${routeFile}:`, error.message);
-  }
-}
-
-// Carregamento das rotas
-console.log('📁 Loading routes...');
-
-loadRoute('routes/campusRoutes', '/api/campuses');
-loadRoute('routes/blockRoutes', '/api/blocks');
-loadRoute('routes/laboratoryRoutes', '/api/laboratories');
-loadRoute('routes/computerRoutes', '/api/computers');
-loadRoute('routes/scheduleSlotRoutes', '/api/schedule-slots');
-loadRoute('routes/labScheduleRoutes', '/api/lab-schedules');
-loadRoute('routes/programRoutes', '/api/programs');
-loadRoute('routes/labProgramRequestRoutes', '/api/lab-program-requests');
-loadRoute('routes/computerProgramRoutes', '/api/computer-programs');
-loadRoute('routes/computerIssueRoutes', '/api/computer-issues');
-loadRoute('routes/maintenanceRequestRoutes', '/api/maintenance-requests');
-loadRoute('routes/userRoutes', '/api/users');
+// API Routes - Must come BEFORE the 404 middleware
+app.use('/api', apiRouter);
 
 // Middleware para rotas não encontradas
 app.use('/', (req, res) => {
@@ -108,7 +101,7 @@ async function startServer() {
       await db.sync({ alter: true });
       console.log('📊 Database models synchronized');
     }
-    
+
     // Inicia servidor
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
@@ -116,6 +109,7 @@ async function startServer() {
       console.log(`🔗 Access: http://localhost:${PORT}`);
       console.log(`💚 Health check: http://localhost:${PORT}/health`);
       console.log(`📖 API docs: http://localhost:${PORT}/`);
+      console.log(`📚 Swagger docs: http://localhost:${PORT}/api-docs`);
     });
     
   } catch (error) {
