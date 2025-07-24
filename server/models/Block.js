@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
-const db = require('../config/db');
+import { DataTypes } from 'sequelize';
+import db from '../config/db.js';
 
 const Block = db.define('Block', {
   block_id: {
@@ -20,4 +20,4 @@ const Block = db.define('Block', {
   timestamps: false
 });
 
-module.exports = Block;
+export default Block;
