@@ -32,4 +32,4 @@ const LabSchedule = db.define('LabSchedule', {
   timestamps: false
 });
 
-module.exports = LabSchedule;
+export default LabSchedule;

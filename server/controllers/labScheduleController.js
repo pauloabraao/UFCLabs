@@ -142,7 +142,7 @@ export const deleteLabSchedule = async (req, res) => {
   }
 };
 
-exports.getLabSchedulesByLabId = async (req, res) => {
+export const getLabSchedulesByLabId = async (req, res) => {
   try {
     const { lab_id } = req.query;
     if (!lab_id) {

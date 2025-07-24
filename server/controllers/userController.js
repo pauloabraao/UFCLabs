@@ -415,7 +415,7 @@ export const loginUser = async (req, res) => {
         role: user.role,
         campus_id: user.campus_id 
       },
-      process.env.JWT_SECRET || 'your-secret-key',
+      process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
 
