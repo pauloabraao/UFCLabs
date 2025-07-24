@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const blockController = require('../controllers/blockController');
+import { getAllBlocks, createBlock, getBlockById, updateBlock, deleteBlock } from '../controllers/blockController.js';
 
-router.get('/', blockController.getAllBlocks);
-router.post('/', blockController.createBlock);
-router.get('/:id', blockController.getBlockById);
-router.put('/:id', blockController.updateBlock);
-router.delete('/:id', blockController.deleteBlock);
+router.get('/', getAllBlocks);
+router.post('/', createBlock);
+router.get('/:id', getBlockById);
+router.put('/:id', updateBlock);
+router.delete('/:id', deleteBlock);
 
-module.exports = router;
+export default router;
