@@ -20,7 +20,7 @@ INSERT INTO Laboratory (block_id, name, capacity, num_computers) VALUES
 (2, 'Laboratório de Informática - Odontologia', 20, 20);
 
 -- Inserir dados na tabela User
-INSERT INTO User (campus_id, name, email, password_user, role) VALUES 
+INSERT INTO User (campus_id, name, email, password, role) VALUES 
 (1, 'Samara Lima', 'samara.lima@sobral.ufc.br', sha2('tecnico123', 256), 'tecnico'),
 (1, 'Sabrina Lima', 'sabrina.lima@sobral.ufc.br', sha2('tecnico123', 256), 'tecnico'),
 (1, 'Breno', 'breno@sobral.ufc.br', sha2('tecnico123', 256), 'tecnico'),
