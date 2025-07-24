@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const scheduleSlotController = require('../controllers/scheduleSlotController');
+import { getAllScheduleSlots, createScheduleSlot, getScheduleSlotById, updateScheduleSlot, deleteScheduleSlot } from '../controllers/scheduleSlotController.js';
 
-router.get('/', scheduleSlotController.getAllScheduleSlots);
-router.post('/', scheduleSlotController.createScheduleSlot);
-router.get('/:id', scheduleSlotController.getScheduleSlotById);
-router.put('/:id', scheduleSlotController.updateScheduleSlot);
-router.delete('/:id', scheduleSlotController.deleteScheduleSlot);
+router.get('/', getAllScheduleSlots);
+router.post('/', createScheduleSlot);
+router.get('/:id', getScheduleSlotById);
+router.put('/:id', updateScheduleSlot);
+router.delete('/:id', deleteScheduleSlot);
 
-module.exports = router;
+export default router;
