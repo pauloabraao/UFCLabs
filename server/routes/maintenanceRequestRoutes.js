@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const maintenanceRequestController = require('../controllers/maintenanceRequestController');
+import { getAllMaintenanceRequests, createMaintenanceRequest, getMaintenanceRequestById, updateMaintenanceRequest, deleteMaintenanceRequest } from '../controllers/maintenanceRequestController.js';
 
-router.get('/', maintenanceRequestController.getAllMaintenanceRequests);
-router.post('/', maintenanceRequestController.createMaintenanceRequest);
-router.get('/:id', maintenanceRequestController.getMaintenanceRequestById);
-router.put('/:id', maintenanceRequestController.updateMaintenanceRequest);
-router.delete('/:id', maintenanceRequestController.deleteMaintenanceRequest);
+router.get('/', getAllMaintenanceRequests);
+router.post('/', createMaintenanceRequest);
+router.get('/:id', getMaintenanceRequestById);
+router.put('/:id', updateMaintenanceRequest);
+router.delete('/:id', deleteMaintenanceRequest);
 
-module.exports = router;
+export default router;
