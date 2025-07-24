@@ -1,14 +1,40 @@
 import React, { useState } from 'react';
 import './Homepage.css';
+import api from '../utils/api.js';
+import { useNavigate } from 'react-router-dom';
 
 const Homepage = () => {
   const [isLogin, setIsLogin] = useState(true); // Estado para controlar se é login ou sign in
-
+  const [error, setError] = useState(''); // Estado para a mensagem de erro
+  const navigate = useNavigate();
+  
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError(''); // Limpa erros anteriores ao submeter novamente
     if (isLogin) {
       // Lógica de login aqui
-      console.log('Login submetido');
+      api.post('/auth/login', {
+        email: e.target.email.value,
+        password: e.target.password.value,
+      })
+      .then(response => {
+        console.log('Login successful:', response.data);
+        // Redirecionar ou atualizar o estado após o login
+        
+        document.cookie = `token=${response.data.token}; path=/;`;
+        navigate('/labs'); // Redireciona para a página de laboratórios após o login
+
+      })
+      .catch(error => {
+        // Verifica se o erro é de credenciais inválidas (status 401)
+        if (error.response && error.response.status === 401) {
+          setError('E-mail ou senha inválidos. Tente novamente.');
+        } else {
+          setError('Ocorreu um erro inesperado. Por favor, tente mais tarde.');
+          console.error('Login failed:', error);
+        }
+      });
+    
     } else {
       // Lógica de registro aqui
       console.log('Sign in submetido');
@@ -113,6 +139,9 @@ const Homepage = () => {
                 </div>
               )}
               
+              {/* Exibe a mensagem de erro, se houver */}
+              {error && <p className="error-message">{error}</p>}
+
               <button type="submit" className="login-button">
                 {isLogin ? 'Entrar' : 'Cadastrar'}
               </button>
