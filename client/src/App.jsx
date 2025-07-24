@@ -7,6 +7,7 @@ import ReportPage from './pages/ReportPage';
 import BlocksPage from "./pages/BlocksPage";
 import LabsPage from "./pages/LabsPage";
 import ComputersPage from "./pages/ComputersPage";
+import ProtectedRoute from "./components/ProtectedRoute"; // rota protegida
 import theme from "./styles/theme";
 
 function App() {
@@ -16,12 +17,20 @@ function App() {
       <Router>
         <div className="container">
           <Routes>
+            {/* Rota pública de Login */}
             <Route path="/" element={<HomePage />} />
-            <Route path="/report" element={<ReportPage />} />
+            {/* <Route path="/report" element={<ReportPage />} />
             <Route path="/labs" element={<LabsPage />} />
             <Route path="/campuses/:campusId/blocks" element={<BlocksPage />} />
             <Route path="/blocks/:blockId/labs" element={<LabsPage />} />
-            <Route path="/labs/:labId/computers" element={<ComputersPage />} />
+            <Route path="/labs/:labId/computers" element={<ComputersPage />} /> */}
+            {/* Rotas protegidas */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/report" element={<ReportPage />} />
+              <Route path="/labs" element={<LabsPage />} />
+              <Route path="/blocks/:blockId/labs" element={<LabsPage />} />
+              <Route path="/labs/:labId/computers" element={<ComputersPage />} />
+            </Route>
           </Routes>
         </div>
       </Router>
