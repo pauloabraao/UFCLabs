@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
-const db = require('../config/db');
+import { DataTypes } from 'sequelize';
+import db from '../config/db.js';
 
 const MaintenanceRequest = db.define('MaintenanceRequest', {
   request_id: {
@@ -32,4 +32,4 @@ const MaintenanceRequest = db.define('MaintenanceRequest', {
   timestamps: false
 });
 
-module.exports = MaintenanceRequest;
+export default MaintenanceRequest;
