@@ -1,6 +1,25 @@
-const LabSchedule = require('../models/LabSchedule');
+import LabSchedule from '../models/LabSchedule.js';
 
-exports.getAllLabSchedules = async (req, res) => {
+/**
+ * @swagger
+ * /api/lab-schedules:
+ *   get:
+ *     summary: Listar todos os agendamentos de laboratório
+ *     description: Retorna uma lista com todos os agendamentos de laboratórios
+ *     tags: [Lab Schedules]
+ *     responses:
+ *       200:
+ *         description: Lista de agendamentos recuperada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/LabSchedule'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+export const getAllLabSchedules = async (req, res) => {
   try {
     const schedules = await LabSchedule.findAll();
     res.json(schedules);
@@ -9,7 +28,63 @@ exports.getAllLabSchedules = async (req, res) => {
   }
 };
 
-exports.createLabSchedule = async (req, res) => {
+/**
+ * @swagger
+ * /api/lab-schedules:
+ *   post:
+ *     summary: Criar um novo agendamento de laboratório
+ *     description: Cria um novo agendamento para um laboratório
+ *     tags: [Lab Schedules]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [lab_id, slot_id, day_of_week, discipline, teacher, status]
+ *             properties:
+ *               lab_id:
+ *                 type: integer
+ *                 description: ID do laboratório
+ *                 example: 1
+ *               slot_id:
+ *                 type: integer
+ *                 description: ID do slot de horário
+ *                 example: 1
+ *               day_of_week:
+ *                 type: integer
+ *                 minimum: 1
+ *                 maximum: 7
+ *                 description: Dia da semana (1=Segunda, 7=Domingo)
+ *                 example: 2
+ *               discipline:
+ *                 type: string
+ *                 maxLength: 100
+ *                 description: Nome da disciplina
+ *                 example: Algoritmos e Estruturas de Dados
+ *               teacher:
+ *                 type: string
+ *                 maxLength: 100
+ *                 description: Nome do professor
+ *                 example: Prof. Maria Santos
+ *               status:
+ *                 type: string
+ *                 enum: [agendado, em andamento, concluido, cancelado]
+ *                 description: Status do agendamento
+ *                 example: agendado
+ *     responses:
+ *       201:
+ *         description: Agendamento criado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LabSchedule'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+export const createLabSchedule = async (req, res) => {
   try {
     const { lab_id, slot_id, day_of_week, discipline, teacher, status } = req.body;
     const newSchedule = await LabSchedule.create({ lab_id, slot_id, day_of_week, discipline, teacher, status });
@@ -19,7 +94,7 @@ exports.createLabSchedule = async (req, res) => {
   }
 };
 
-exports.getLabScheduleById = async (req, res) => {
+export const getLabScheduleById = async (req, res) => {
   try {
     const { lab_id, slot_id, day_of_week } = req.params;
     const schedule = await LabSchedule.findOne({
@@ -34,7 +109,7 @@ exports.getLabScheduleById = async (req, res) => {
   }
 };
 
-exports.updateLabSchedule = async (req, res) => {
+export const updateLabSchedule = async (req, res) => {
   try {
     const { lab_id, slot_id, day_of_week } = req.params;
     const { discipline, teacher, status } = req.body;
@@ -51,7 +126,7 @@ exports.updateLabSchedule = async (req, res) => {
   }
 };
 
-exports.deleteLabSchedule = async (req, res) => {
+export const deleteLabSchedule = async (req, res) => {
   try {
     const { lab_id, slot_id, day_of_week } = req.params;
     const schedule = await LabSchedule.findOne({

@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
-const db = require('../config/db');
+import { DataTypes } from 'sequelize';
+import db from '../config/db.js';
 
 const LabSchedule = db.define('LabSchedule', {
   lab_id: {
@@ -32,4 +32,4 @@ const LabSchedule = db.define('LabSchedule', {
   timestamps: false
 });
 
-module.exports = LabSchedule;
+export default LabSchedule;

@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const programController = require('../controllers/programController');
+import { getAllPrograms, createProgram, getProgramById, updateProgram, deleteProgram } from '../controllers/programController.js';
 
-router.get('/', programController.getAllPrograms);
-router.post('/', programController.createProgram);
-router.get('/:id', programController.getProgramById);
-router.put('/:id', programController.updateProgram);
-router.delete('/:id', programController.deleteProgram);
+router.get('/', getAllPrograms);
+router.post('/', createProgram);
+router.get('/:id', getProgramById);
+router.put('/:id', updateProgram);
+router.delete('/:id', deleteProgram);
 
-module.exports = router;
+export default router;

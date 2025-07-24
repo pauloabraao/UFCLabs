@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
-const db = require('../config/db');
+import { DataTypes } from 'sequelize';
+import db from '../config/db.js';
 
 const ScheduleSlot = db.define('ScheduleSlot', {
   slot_id: {
@@ -20,4 +20,4 @@ const ScheduleSlot = db.define('ScheduleSlot', {
   timestamps: false
 });
 
-module.exports = ScheduleSlot;
+export default ScheduleSlot;

@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const computerIssueController = require('../controllers/computerIssueController');
+import { getAllComputerIssues, createComputerIssue, getComputerIssueById, updateComputerIssue, deleteComputerIssue } from '../controllers/computerIssueController.js';
 
-router.get('/', computerIssueController.getAllComputerIssues);
-router.post('/', computerIssueController.createComputerIssue);
-router.get('/:id', computerIssueController.getComputerIssueById);
-router.put('/:id', computerIssueController.updateComputerIssue);
-router.delete('/:id', computerIssueController.deleteComputerIssue);
+router.get('/', getAllComputerIssues);
+router.post('/', createComputerIssue);
+router.get('/:id', getComputerIssueById);
+router.put('/:id', updateComputerIssue);
+router.delete('/:id', deleteComputerIssue);
 
-module.exports = router;
+export default router;

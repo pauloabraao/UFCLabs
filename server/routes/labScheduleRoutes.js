@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const labScheduleController = require('../controllers/labScheduleController');
+import { getAllLabSchedules, createLabSchedule, getLabScheduleById, updateLabSchedule, deleteLabSchedule } from '../controllers/labScheduleController.js';
 
-router.get('/', labScheduleController.getAllLabSchedules);
-router.post('/', labScheduleController.createLabSchedule);
-router.get('/:lab_id/:slot_id/:day_of_week', labScheduleController.getLabScheduleById);
-router.put('/:lab_id/:slot_id/:day_of_week', labScheduleController.updateLabSchedule);
-router.delete('/:lab_id/:slot_id/:day_of_week', labScheduleController.deleteLabSchedule);
+router.get('/', getAllLabSchedules);
+router.post('/', createLabSchedule);
+router.get('/:lab_id/:slot_id/:day_of_week', getLabScheduleById);
+router.put('/:lab_id/:slot_id/:day_of_week', updateLabSchedule);
+router.delete('/:lab_id/:slot_id/:day_of_week', deleteLabSchedule);
 
-module.exports = router;
+export default router;

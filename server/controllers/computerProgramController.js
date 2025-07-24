@@ -1,6 +1,25 @@
-const ComputerProgram = require('../models/ComputerProgram');
+import ComputerProgram from '../models/ComputerProgram.js';
 
-exports.getAllComputerPrograms = async (req, res) => {
+/**
+ * @swagger
+ * /api/computer-programs:
+ *   get:
+ *     summary: Listar todos os programas dos computadores
+ *     description: Retorna uma lista com todos os programas instalados nos computadores
+ *     tags: [Computer Programs]
+ *     responses:
+ *       200:
+ *         description: Lista de programas recuperada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ComputerProgram'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+export const getAllComputerPrograms = async (req, res) => {
   try {
     const cps = await ComputerProgram.findAll();
     res.json(cps);
@@ -9,7 +28,42 @@ exports.getAllComputerPrograms = async (req, res) => {
   }
 };
 
-exports.createComputerProgram = async (req, res) => {
+/**
+ * @swagger
+ * /api/computer-programs:
+ *   post:
+ *     summary: Associar programa a computador
+ *     description: Cria uma nova associação entre computador e programa
+ *     tags: [Computer Programs]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [computer_id, program_id]
+ *             properties:
+ *               computer_id:
+ *                 type: integer
+ *                 description: ID do computador
+ *                 example: 1
+ *               program_id:
+ *                 type: integer
+ *                 description: ID do programa
+ *                 example: 1
+ *     responses:
+ *       201:
+ *         description: Associação criada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ComputerProgram'
+ *       400:
+ *         $ref: '#/components/responses/BadRequest'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
+export const createComputerProgram = async (req, res) => {
   try {
     const { computer_id, program_id } = req.body;
     const newCP = await ComputerProgram.create({ computer_id, program_id });
@@ -19,7 +73,7 @@ exports.createComputerProgram = async (req, res) => {
   }
 };
 
-exports.getComputerProgramById = async (req, res) => {
+export const getComputerProgramById = async (req, res) => {
   try {
     const { computer_id, program_id } = req.params;
     const cp = await ComputerProgram.findOne({
@@ -34,7 +88,7 @@ exports.getComputerProgramById = async (req, res) => {
   }
 };
 
-exports.deleteComputerProgram = async (req, res) => {
+export const deleteComputerProgram = async (req, res) => {
   try {
     const { computer_id, program_id } = req.params;
     const cp = await ComputerProgram.findOne({

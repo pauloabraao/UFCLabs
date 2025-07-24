@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const labProgramRequestController = require('../controllers/labProgramRequestController');
+import { getAllLabProgramRequests, createLabProgramRequest, getLabProgramRequestById, updateLabProgramRequest, deleteLabProgramRequest } from '../controllers/labProgramRequestController.js';
 
-router.get('/', labProgramRequestController.getAllLabProgramRequests);
-router.post('/', labProgramRequestController.createLabProgramRequest);
-router.get('/:id', labProgramRequestController.getLabProgramRequestById);
-router.put('/:id', labProgramRequestController.updateLabProgramRequest);
-router.delete('/:id', labProgramRequestController.deleteLabProgramRequest);
+router.get('/', getAllLabProgramRequests);
+router.post('/', createLabProgramRequest);
+router.get('/:id', getLabProgramRequestById);
+router.put('/:id', updateLabProgramRequest);
+router.delete('/:id', deleteLabProgramRequest);
 
-module.exports = router;
+export default router;

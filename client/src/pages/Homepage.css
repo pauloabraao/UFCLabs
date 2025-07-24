@@ -32,6 +32,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s ease;
 }
 
 /* Estilos da metade com imagem */
@@ -79,11 +80,14 @@
 /* Estilos da metade com formulário */
 .form-half {
   background-color: #f8f9fa;
+  overflow-y: auto;
 }
 
 .form-container {
   width: 70%;
   max-width: 400px;
+  padding: 20px 0;
+  transition: all 0.3s ease;
 }
 
 .form-title {
@@ -91,20 +95,29 @@
   font-size: 2rem;
   margin-bottom: 0.5rem;
   font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 .form-subtitle {
   color: #718096;
   margin-bottom: 2rem;
   font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
 .login-form {
   margin-top: 2rem;
+  transition: all 0.3s ease;
 }
 
 .form-group {
   margin-bottom: 1.5rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .form-label {
@@ -136,6 +149,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+  animation: fadeIn 0.3s ease;
 }
 
 .remember-me {
@@ -184,16 +198,46 @@
   text-align: center;
   color: #718096;
   font-size: 0.9rem;
+  animation: fadeIn 0.3s ease;
 }
 
 .signup-link {
   color: #3182ce;
+  background: none;
+  border: none;
   text-decoration: none;
   font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 5px;
+  font: inherit;
 }
 
 .signup-link:hover {
   text-decoration: underline;
+}
+
+/* Efeitos para transição entre formulários */
+.form-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.form-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
+
+.form-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.form-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
 }
 
 /* Responsividade */
@@ -215,5 +259,19 @@
     position: static;
     padding: 20px;
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    width: 95%;
+  }
+  
+  .form-title {
+    font-size: 1.8rem;
+  }
+  
+  .form-subtitle {
+    font-size: 0.9rem;
   }
 }

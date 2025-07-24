@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const computerController = require('../controllers/computerController');
+import { getAllComputers, createComputer, getComputerById, updateComputer, deleteComputer } from '../controllers/computerController.js';
 
-router.get('/', computerController.getAllComputers);
-router.post('/', computerController.createComputer);
-router.get('/:id', computerController.getComputerById);
-router.put('/:id', computerController.updateComputer);
-router.delete('/:id', computerController.deleteComputer);
+router.get('/', getAllComputers);
+router.post('/', createComputer);
+router.get('/:id', getComputerById);
+router.put('/:id', updateComputer);
+router.delete('/:id', deleteComputer);
 
-module.exports = router;
+export default router;
