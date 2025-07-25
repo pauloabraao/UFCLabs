@@ -6,11 +6,13 @@ import { useNavigate } from 'react-router-dom';
 const Homepage = () => {
   const [isLogin, setIsLogin] = useState(true); // Estado para controlar se é login ou sign in
   const [error, setError] = useState(''); // Estado para a mensagem de erro
+  const [success, setSuccess] = useState(''); // Estado para a mensagem de sucesso
   const navigate = useNavigate();
   
   const handleSubmit = (e) => {
     e.preventDefault();
     setError(''); // Limpa erros anteriores ao submeter novamente
+    setSuccess(''); // Limpa a mensagem de sucesso
     if (isLogin) {
       // Lógica de login aqui
       api.post('/auth/login', {
@@ -36,13 +38,48 @@ const Homepage = () => {
       });
     
     } else {
-      // Lógica de registro aqui
-      console.log('Sign in submetido');
+      // Lógica de registro
+      const name = e.target.name.value;
+      const email = e.target.email.value;
+      const password = e.target.password.value;
+      const confirmPassword = e.target.confirmPassword.value;
+
+      if (password !== confirmPassword) {
+        setError('As senhas não coincidem.');
+        return;
+      }
+
+      api.post('/users', {
+        name,
+        email,
+        password,
+        role: 'estudante', // Role é sempre 'estudante' no cadastro via frontend
+        campus_id: 1 // TODO: Adicionar um seletor de campus no futuro
+      })
+      .then(response => {
+        console.log('Registration successful:', response.data);
+        setSuccess('Conta criada com sucesso! Por favor, faça o login.');
+        setIsLogin(true); // Volta para a tela de login
+      })
+      .catch(error => {
+        if (error.response && error.response.data && error.response.data.error) {
+          if (error.response.data.error.includes('email')) {
+            setError('Este e-mail já está cadastrado. Tente fazer login.');
+          } else {
+            setError('Erro ao criar a conta: ' + error.response.data.error);
+          }
+        } else {
+          setError('Ocorreu um erro inesperado ao criar a conta. Tente novamente.');
+        }
+        console.error('Registration failed:', error);
+      });
     }
   };
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
+    setError('');
+    setSuccess('');
   };
 
   return (
@@ -79,6 +116,9 @@ const Homepage = () => {
             <p className="form-subtitle">
               {isLogin ? 'Entre com suas credenciais para acessar o sistema' : 'Preencha os campos para se registrar'}
             </p>
+            
+            {/* Exibe a mensagem de sucesso, se houver */}
+            {success && <p className="success-message">{success}</p>}
             
             <form onSubmit={handleSubmit} className="login-form">
               {!isLogin && (
