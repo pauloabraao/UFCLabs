@@ -115,7 +115,7 @@ const swaggerOptions = {
         },
         Computer: {
           type: 'object',
-          required: ['lab_id', 'status'],
+          required: ['number_id','property_id', 'lab_id', 'status', 'os', 'cpu', 'ram', 'storage'],
           properties: {
             computer_id: {
               type: 'integer',
@@ -126,6 +126,12 @@ const swaggerOptions = {
               type: 'integer',
               description: 'ID do laboratório ao qual o computador pertence',
               example: 1
+            },
+            property_id: {
+              type: 'string',
+              maxLength: 30,
+              description: 'Patrimônio',
+              example: '12345678'
             },
             os: {
               type: 'string',

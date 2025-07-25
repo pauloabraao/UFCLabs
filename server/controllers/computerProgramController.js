@@ -73,20 +73,40 @@ export const createComputerProgram = async (req, res) => {
   }
 };
 
-export const getComputerProgramById = async (req, res) => {
+export const getProgramsByProgramId = async (req, res) => {
   try {
     const { computer_id, program_id } = req.params;
-    const cp = await ComputerProgram.findOne({
+    const programs = await ComputerProgram.findAll({
       where: { computer_id, program_id }
     });
-    if (!cp) {
-      return res.status(404).json({ error: 'ComputerProgram not found' });
+
+    if (programs.length === 0) {
+      return res.status(404).json({ error: 'No programs found for this program_id' });
     }
-    res.json(cp);
+
+    res.json(programs);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const getProgramsByComputerId = async (req, res) => {
+  try {
+    const { computer_id } = req.params;
+    const programs = await ComputerProgram.findAll({
+      where: { computer_id }
+    });
+
+    if (programs.length === 0) {
+      return res.status(404).json({ error: 'No programs found for this computer_id' });
+    }
+
+    res.json(programs);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 export const deleteComputerProgram = async (req, res) => {
   try {

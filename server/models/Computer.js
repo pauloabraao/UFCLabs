@@ -15,6 +15,9 @@ const Computer = db.define('Computer', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  property_id: {
+    type: DataTypes.STRING(30)
+  },
   os: {
     type: DataTypes.STRING(100)
   },

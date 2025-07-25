@@ -97,8 +97,8 @@ export const getAllComputers = async (req, res) => {
  */
 export const createComputer = async (req, res) => {
   try {
-    const { lab_id, number_id, os, cpu, ram, storage, status } = req.body;
-    const newComputer = await Computer.create({ lab_id, number_id, os, cpu, ram, storage, status });
+    const { lab_id, number_id, property_id, os, cpu, ram, storage, status } = req.body;
+    const newComputer = await Computer.create({ lab_id, number_id, property_id, os, cpu, ram, storage, status });
     res.status(201).json(newComputer);
   } catch (error) {
     res.status(400).json({ error: error.message });

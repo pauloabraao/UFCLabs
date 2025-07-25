@@ -1,10 +1,11 @@
 import express from 'express';
 const router = express.Router();
-import { getAllComputerPrograms, createComputerProgram, getComputerProgramById, deleteComputerProgram } from '../controllers/computerProgramController.js';
+import { getAllComputerPrograms, createComputerProgram, deleteComputerProgram, getProgramsByComputerId, getProgramsByProgramId } from '../controllers/computerProgramController.js';
 
 router.get('/', getAllComputerPrograms);
 router.post('/', createComputerProgram);
-router.get('/:computer_id/:program_id', getComputerProgramById);
+router.get('/computer/:computer_id', getProgramsByComputerId);
+router.get('/:computer_id/:program_id', getProgramsByProgramId);
 router.delete('/:computer_id/:program_id', deleteComputerProgram);
 
 export default router;
