@@ -7,7 +7,7 @@ import AddComputerModal from "../components/AddComputerModal";
 import EditComputerModal from "../components/EditComputerModal";
 import ComputersHeader from "../components/ComputersHeader";
 import ScheduleLabModal from "../components/ScheduleLabModal";
-import { Container, Typography } from "@mui/material";
+import { Container, Typography, CircularProgress, Box } from "@mui/material";
 import './ComputersPage.css';
 
 function ComputersPage() {
@@ -113,25 +113,33 @@ function ComputersPage() {
         onOpenSchedule={handleOpenSchedule}
       />
       <main className="main-content">
-          <Link to={`/blocks/${computers[0]?.lab_id || ""}/labs`}>
+        <Link to={`/blocks/${labId}/labs`} className="back-link"> 
             ← Voltar para Laboratórios
-          </Link>
-          {loading ? (
-            <Typography>Carregando...</Typography>
-          ) : (
-            <div className="computers-list">
-              {computers.map((computer) => (
-                <ComputerCard
-                  key={computer.computer_id}
-                  computer={computer}
-                  onEdit={handleCardClick}
-                />
-              ))}
-              {computers.length === 0 && (
-                <Typography>Nenhum computador encontrado.</Typography>
-              )}
-            </div>
-          )}
+        </Link>
+        {loading ? (
+          // Animação de carregamento
+          <Box className="loading-container"> 
+            <CircularProgress />
+            <Typography variant="h6" className="loading-text"> 
+              Carregando computadores...
+            </Typography>
+          </Box>
+        ) : computers.length === 0 ? (
+          <Typography variant="h6" className="message-text"> 
+            Nenhum computador encontrado para este laboratório.
+          </Typography>
+        ) : (
+          // Exibição dos computadores
+          <div className="computers-list">
+            {computers.map((computer) => (
+              <ComputerCard
+                key={computer.computer_id}
+                computer={computer}
+                onClick={() => handleCardClick(computer)}
+              />
+            ))}
+          </div>
+        )}
       </main>
       <AddComputerModal
         isOpen={isModalOpen}

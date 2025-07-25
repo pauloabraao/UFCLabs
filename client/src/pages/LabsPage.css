@@ -42,9 +42,11 @@ body {
     background-color: #fff;
     border-radius: 6px;
     font-size: 1rem;
+    width: 250px;
     font-weight: 500;
     color: #333;
     border: 1px solid #e0e0e0;
+    height: 48px;
 }
 
 .btn-add {
@@ -58,6 +60,7 @@ body {
     cursor: pointer;
     display: flex;
     align-items: center;
+    height: 48px;
     gap: 0.5rem;
     transition: background-color 0.2s;
 }
@@ -84,24 +87,27 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
+    
 }
 
 .lab-card {
-    background-color: #efefef;
+      background-color: #ffffff;
     padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; 
     cursor: pointer;
-    height: 200px;
-    display: flexbox;
-    align-items: flex-start;
+    height: 180px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+    align-items: flex-start; 
     position: relative;
 }
 
-.lab-card.occupied:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+.lab-card:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25); 
 }
 
 .lab-card.placeholder {
@@ -114,14 +120,44 @@ body {
 }
 
 .lab-card h4 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #444;
+    margin-top: 0;
+    margin-bottom: 1rem; 
+    font-size: 1.25rem; 
+    color: #333; 
+    word-break: break-word; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+    max-width: 100%;
 }
 
 .lab-card p{
     padding-top: 10px;
 }
+
+.lab-tags {
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    margin-top: auto; 
+}
+
+.tag {
+    background-color: #e0e0e0;
+    color: #555; 
+    padding: 0.4em 0.8em; 
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600; 
+    white-space: nowrap; 
+}
+
+.tag:hover {
+    background-color: #cce9d5; 
+    color: #555; 
+    
+}
+
 
 .modal {
     display: block;
@@ -211,7 +247,46 @@ body {
     color: #fff;
 }
 
-/* Edit and delete buttons in lab card */
+.loading-container {
+  display: flex;
+  justify-content: center; 
+  align-items: center;  
+  height: 200px;         
+  margin: 10px;
+}
+
+.loading-text {
+  margin-left: 16px; 
+ 
+}
+
+
+.message-text {
+  text-align: center;
+  margin-top: 32px; 
+ 
+}
+
+.back-link {
+    display: block;
+    margin-bottom: 20px;
+    color: #007bff; 
+    text-decoration: none; 
+    font-size: 1rem;
+    padding-left: 20px; 
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.computers-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
 .lab-edit-btn, .lab-delete-btn {
     background: none;
     border: none;

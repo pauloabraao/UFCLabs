@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import ReportPage from './pages/ReportPage';
 import BlocksPage from "./pages/BlocksPage";
 import LabsPage from "./pages/LabsPage";
+import TicketsPage from "./pages/TicketsPage";
 import ComputersPage from "./pages/ComputersPage";
 import ProtectedRoute from "./components/ProtectedRoute"; // rota protegida
 import theme from "./styles/theme";
@@ -27,6 +28,7 @@ function App() {
             {/* Rotas protegidas */}
             <Route element={<ProtectedRoute />}>
               <Route path="/report" element={<ReportPage />} />
+              <Route path="/tickets" element={<TicketsPage />} />
               <Route path="/labs" element={<LabsPage />} />
               <Route path="/blocks/:blockId/labs" element={<LabsPage />} />
               <Route path="/labs/:labId/computers" element={<ComputersPage />} />

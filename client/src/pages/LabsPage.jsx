@@ -4,22 +4,18 @@ import LabGrid from '../components/LabGrid';
 import AddLabModal from '../components/AddLabModal';
 import EditLabModal from '../components/EditLabModal';
 import './LabsPage.css';
-import api from '../utils/api'; // Usar a instância do axios configurada
-import { useParams } from "react-router-dom";
-import { Typography } from "@mui/material";
-import getUserInfo from '../utils/getUserInfo'; // Importa o utilitário
+import axios from 'axios';
+import { useParams, useNavigate } from "react-router-dom";
+import { Typography, CircularProgress, Box } from "@mui/material";
 
 function LabsPage() {
-  const { blockId } = useParams(); // blockId da URL, se houver
+  const { blockId } = useParams();
+  const navigate = useNavigate();
   const [labs, setLabs] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [editLab, setEditLab] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
-  // Verifica a role do usuário a partir do token
-  const userInfo = getUserInfo();
-  const isAdmin = userInfo?.role === 'administrador';
 
   // New state for campuses and blocks
   const [campuses, setCampuses] = useState([]);
@@ -29,7 +25,7 @@ function LabsPage() {
 
   // Fetch campuses on mount
   useEffect(() => {
-    api.get('/campuses')
+    axios.get('http://localhost:3000/api/campuses')
       .then(res => setCampuses(res.data))
       .catch(() => setCampuses([]));
   }, []);
@@ -37,7 +33,7 @@ function LabsPage() {
   // Fetch blocks when campus changes
   useEffect(() => {
     if (selectedCampusId) {
-      api.get(`/blocks?campus_id=${selectedCampusId}`)
+      axios.get(`http://localhost:3000/api/blocks?campus_id=${selectedCampusId}`)
         .then(res => setBlocks(res.data))
         .catch(() => setBlocks([]));
     } else {
@@ -50,7 +46,7 @@ function LabsPage() {
   useEffect(() => {
     if (selectedBlockId) {
       setLoading(true);
-      api.get(`/laboratories?block_id=${selectedBlockId}`)
+      axios.get(`http://localhost:3000/api/laboratories?block_id=${selectedBlockId}`)
         .then(res => setLabs(res.data))
         .catch(() => setLabs([]))
         .finally(() => setLoading(false));
@@ -68,7 +64,7 @@ function LabsPage() {
   }, [blockId]);
 
   const handleAddLab = (novoLab) => {
-    api.post('/laboratories', {
+    axios.post('http://localhost:3000/api/laboratories', {
       block_id: parseInt(selectedBlockId),
       name: novoLab.name,
       capacity: parseInt(novoLab.capacity),
@@ -85,10 +81,7 @@ function LabsPage() {
   };
 
   const handleOpenModal = () => {
-    // Garante que apenas administradores possam abrir o modal
-    if (isAdmin) {
-      setIsModalOpen(true);
-    }
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
@@ -107,7 +100,7 @@ function LabsPage() {
   };
 
   const handleUpdateLab = (updatedLab) => {
-    api.put(`/laboratories/${updatedLab.lab_id}`, updatedLab)
+    axios.put(`http://localhost:3000/api/laboratories/${updatedLab.lab_id}`, updatedLab)
       .then(res => {
         setLabs(labs.map(l => l.lab_id === updatedLab.lab_id ? res.data : l));
         setIsEditModalOpen(false);
@@ -118,7 +111,7 @@ function LabsPage() {
 
   const handleDeleteLab = (lab) => {
     if (window.confirm(`Tem certeza que deseja excluir o laboratório "${lab.name}"? Esta ação não pode ser desfeita.`)) {
-      api.delete(`/laboratories/${lab.lab_id}`)
+      axios.delete(`http://localhost:3000/api/laboratories/${lab.lab_id}`)
         .then(() => {
           setLabs(labs.filter(l => l.lab_id !== lab.lab_id));
           setIsEditModalOpen(false);
@@ -153,17 +146,29 @@ function LabsPage() {
         selectedBlockId={selectedBlockId}
         onCampusChange={handleCampusChange}
         onBlockChange={handleBlockChange}
-        isAdmin={isAdmin}
       />
-      <main className="main-content">
+       <main className="main-content">
         {loading ? (
-          <Typography>Carregando...</Typography>
+          
+          <Box className="loading-container"> 
+            <CircularProgress />
+            <Typography variant="h6" className="loading-text"> 
+              Carregando laboratórios...
+            </Typography>
+          </Box>
         ) : (
-          <LabGrid
-            labs={labs}
-            onEditLab={handleEditLab}
-            onDeleteLab={handleDeleteLab}
-          />
+         
+          labs.length === 0 && selectedBlockId ? (
+            <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
+              Nenhum laboratório encontrado para o bloco selecionado.
+            </Typography>
+          ) : labs.length === 0 && !selectedBlockId ? (
+             <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
+               Selecione um campus e um bloco para visualizar os laboratórios.
+             </Typography>
+          ) : (
+            <LabGrid labs={labs} />
+          )
         )}
       </main>
       <AddLabModal

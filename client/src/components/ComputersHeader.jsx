@@ -14,13 +14,16 @@ function ComputersHeader({ labName, onOpenModal, onLogout, onOpenSchedule }) {
           <div className="info-display">
             {labName ? labName : "Laboratório"}
           </div>
-        </div>
-        <div className="header-right">
-          <button className="btn-add" onClick={onOpenModal}>
-            Computador <i className="fas fa-plus"></i>
-          </button>
           <button className="btn-add" onClick={onOpenSchedule}>
             Horário <i className="fas fa-calendar-alt"></i>
+          </button>
+        </div>
+        <div className="header-right">
+          <button className="btn-add" onClick={() => window.location.href = '/tickets'}>
+            Chamado <i className="fas fa-plus"></i>
+          </button>
+          <button className="btn-add" onClick={onOpenModal}>
+            Computador <i className="fas fa-plus"></i>
           </button>
           <a
             href="#"

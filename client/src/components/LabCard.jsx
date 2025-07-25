@@ -33,8 +33,11 @@ function LabCard({ lab, onEdit, onDelete }) {
                 </button>
             </div>
             <h4>{lab.name}</h4>
-            <p>Capacidade: {lab.capacity}</p>
-            <p>Computadores: {lab.num_computers}</p>
+             <div className="lab-tags"> 
+                <span className="tag">PCs: {lab.num_computers}</span>
+                <span className="tag">Capacidade: {lab.capacity}</span> 
+            </div>
+            
         </article>
     );
 }

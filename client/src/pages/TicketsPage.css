@@ -1,0 +1,163 @@
+.tickets-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-family: sans-serif;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Cabeçalho */
+.tickets-table th {
+  background-color: #f9f9f9;
+  padding: 12px 10px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #444;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Células */
+.tickets-table td {
+  padding: 12px 10px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Última linha sem borda */
+.tickets-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Badges de status */
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 13px;
+  display: inline-block;
+  min-width: 90px;
+  text-align: center;
+}
+
+/* Cores dos status */
+.status-badge.aberto {
+  background-color: #f8d7da;
+  color: #c82333;
+}
+
+.status-badge.andamento {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.resolvido {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+/* Link 'Ver' */
+.ver-link,
+.tickets-table a {
+  color: #007bff;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ver-link:hover,
+.tickets-table a:hover {
+  text-decoration: underline;
+}
+
+/* Botão flutuante */
+.fab-inferior-direito {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 9999 !important;
+  height: 56px !important;
+  padding: 0 24px !important;
+  border-radius: 28px !important;
+  font-size: 16px !important;
+  text-transform: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Filtros de status (abas) */
+.filtro-status {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 2px solid #eee;
+  background-color: white;
+  margin-bottom: 10px;
+}
+
+.filtro-botao {
+  background: none;
+  border: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  color: #444;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.filtro-botao:hover {
+  color: #58c4c4;
+}
+
+.filtro-botao.ativo {
+  border-color: #58c4c4;
+  color: #58c4c4;
+}
+
+thead > tr > th {
+  font-weight: 100 !important;
+}
+
+.tabela-scroll {
+  max-height: 550px;
+  overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.tickets-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-family: sans-serif;
+  table-layout: fixed;
+}
+
+.tickets-table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #f9f9f9;
+  z-index: 1;
+  padding: 12px 10px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #444;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.tickets-table tbody td {
+  padding: 12px 10px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #333;
+}
+
+.tickets-table tbody tr:last-child td {
+  border-bottom: none;
+}
