@@ -135,7 +135,10 @@ function ComputersPage() {
               <ComputerCard
                 key={computer.computer_id}
                 computer={computer}
-                onClick={() => handleCardClick(computer)}
+                onEdit={() => {
+                setComputerToEdit(computer);
+                setEditModalOpen(true);
+              }}
               />
             ))}
           </div>

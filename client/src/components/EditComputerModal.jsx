@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 function EditComputerModal({ isOpen, onClose, computer, onEditComputer, onDeleteComputer }) {
   const [os, setOs] = useState("");
+  const [property_id, setPropertyId] = useState("");
   const [cpu, setCpu] = useState("");
   const [ram, setRam] = useState("");
   const [storage, setStorage] = useState("");
@@ -10,6 +11,7 @@ function EditComputerModal({ isOpen, onClose, computer, onEditComputer, onDelete
   useEffect(() => {
     if (computer) {
       setOs(computer.os || "");
+      setPropertyId(computer.property_id || "");
       setCpu(computer.cpu || "");
       setRam(computer.ram || "");
       setStorage(computer.storage || "");
@@ -28,6 +30,7 @@ function EditComputerModal({ isOpen, onClose, computer, onEditComputer, onDelete
       ram,
       storage,
       status,
+      property_id
     });
   };
 
@@ -43,6 +46,16 @@ function EditComputerModal({ isOpen, onClose, computer, onEditComputer, onDelete
         <span className="fechar" onClick={onClose}>&times;</span>
         <h2>Editar Computador</h2>
         <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="property_id-edit">Partimônio</label>
+            <input
+              type="text"
+              id="property_id-edit"
+              value={property_id}
+              onChange={e => setPropertyId(e.target.value)}
+              placeholder="Ex: 1234567"
+            />
+          </div>
           <div className="form-group">
             <label htmlFor="os-edit">Sistema Operacional</label>
             <input

@@ -9,6 +9,7 @@ import "../pages/ComputersPage.css";
 // Modal for adding a computer
 function AddComputerModal({ isOpen, onClose, onAddComputer }) {
   const [numberId, setNumberId] = useState("");
+  const [property_id, setPropertyId] = useState("");
   const [os, setOs] = useState("");
   const [cpu, setCpu] = useState("");
   const [ram, setRam] = useState("");
@@ -17,8 +18,9 @@ function AddComputerModal({ isOpen, onClose, onAddComputer }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAddComputer({ number_id: parseInt(numberId), os, cpu, ram, storage, status });
+    onAddComputer({ number_id: parseInt(numberId), os, cpu, ram, storage, status, property_id });
     setNumberId("");
+    setPropertyId("");
     setOs("");
     setCpu("");
     setRam("");
@@ -48,6 +50,17 @@ function AddComputerModal({ isOpen, onClose, onAddComputer }) {
               value={numberId}
               onChange={(e) => setNumberId(e.target.value)}
               placeholder="Ex: 1"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="property-id">Número do Patrimônio</label>
+            <input
+              type="text"
+              id="property-id"
+              value={property_id}
+              onChange={(e) => setPropertyId(e.target.value)}
+              placeholder="Ex: 12345678"
               required
             />
           </div>

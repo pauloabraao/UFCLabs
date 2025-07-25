@@ -5,6 +5,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import HomePage from "./pages/HomePage";
 import ReportPage from './pages/ReportPage';
 import BlocksPage from "./pages/BlocksPage";
+import ProgramPage from "./pages/ProgramPage";
 import LabsPage from "./pages/LabsPage";
 import TicketsPage from "./pages/TicketsPage";
 import ComputersPage from "./pages/ComputersPage";
@@ -32,6 +33,7 @@ function App() {
               <Route path="/labs" element={<LabsPage />} />
               <Route path="/blocks/:blockId/labs" element={<LabsPage />} />
               <Route path="/labs/:labId/computers" element={<ComputersPage />} />
+              <Route path="/computers/:computerId/programs" element={<ProgramPage />} />
             </Route>
           </Routes>
         </div>

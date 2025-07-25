@@ -167,7 +167,9 @@ function LabsPage() {
                Selecione um campus e um bloco para visualizar os laboratórios.
              </Typography>
           ) : (
-            <LabGrid labs={labs} />
+            <LabGrid labs={labs}
+            onEditLab={handleEditLab}
+            onDeleteLab={handleDeleteLab} />
           )
         )}
       </main>
