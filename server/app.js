@@ -19,7 +19,6 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Middleware de log (opcional)
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
@@ -87,7 +86,7 @@ app.use('/', (req, res) => {
 
 // Middleware global de tratamento de erros
 app.use((err, req, res, next) => {
-  console.error('❌ Global error:', err);
+  console.error('Erro:', err);
   res.status(err.status || 500).json({
     error: 'Internal Server Error',
     message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
@@ -98,41 +97,40 @@ app.use((err, req, res, next) => {
 async function startServer() {
   try {
     // Testa conexão com banco
-    console.log('🔌 Testing database connection...');
+    console.log('Testing database connection...');
     await db.authenticate();
-    console.log('✅ Database connected successfully');
+    console.log('Database connected successfully');
     
     // Sincroniza modelos em desenvolvimento (opcional)
     if (process.env.NODE_ENV === 'development' && process.env.DB_SYNC === 'true') {
       await db.sync({ alter: true });
-      console.log('📊 Database models synchronized');
+      console.log('Database models synchronized');
     }
 
     // Inicia servidor
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`🔗 Access: http://localhost:${PORT}`);
-      console.log(`💚 Health check: http://localhost:${PORT}/health`);
-      console.log(`📖 API docs: http://localhost:${PORT}/`);
-      console.log(`📚 Swagger docs: http://localhost:${PORT}/api-docs`);
+      console.log(`Server running on port ${PORT}`);
+      console.log(`Access: http://localhost:${PORT}`);
+      console.log(`Health check: http://localhost:${PORT}/health`);
+      console.log(`Swagger docs: http://localhost:${PORT}/api-docs`);
     });
     
   } catch (error) {
-    console.error('❌ Failed to start server:', error.message);
+    console.error('Failed to start server:', error.message);
     process.exit(1);
   }
 }
 
 // Tratamento de encerramento gracioso
 process.on('SIGTERM', async () => {
-  console.log('🛑 SIGTERM received, shutting down gracefully');
+  console.log('SIGTERM received, shutting down gracefully');
   await db.close();
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
-  console.log('🛑 SIGINT received, shutting down gracefully');
+  console.log('SIGINT received, shutting down gracefully');
   await db.close();
   process.exit(0);
 });

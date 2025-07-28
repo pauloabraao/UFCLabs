@@ -11,10 +11,10 @@ const Homepage = () => {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError(''); // Limpa erros anteriores ao submeter novamente
-    setSuccess(''); // Limpa a mensagem de sucesso
+    setError('');
+    setSuccess('');
     if (isLogin) {
-      // Lógica de login aqui
+      // Login
       api.post('/auth/login', {
         email: e.target.email.value,
         password: e.target.password.value,
@@ -28,7 +28,7 @@ const Homepage = () => {
 
       })
       .catch(error => {
-        // Verifica se o erro é de credenciais inválidas (status 401)
+        // Verifica se o erro é de credenciais inválidas
         if (error.response && error.response.status === 401) {
           setError('E-mail ou senha inválidos. Tente novamente.');
         } else {
@@ -54,7 +54,7 @@ const Homepage = () => {
         email,
         password,
         role: 'estudante', // Role é sempre 'estudante' no cadastro via frontend
-        campus_id: 1 // TODO: Adicionar um seletor de campus no futuro
+        campus_id: 1
       })
       .then(response => {
         console.log('Registration successful:', response.data);
@@ -117,7 +117,6 @@ const Homepage = () => {
               {isLogin ? 'Entre com suas credenciais para acessar o sistema' : 'Preencha os campos para se registrar'}
             </p>
             
-            {/* Exibe a mensagem de sucesso, se houver */}
             {success && <p className="success-message">{success}</p>}
             
             <form onSubmit={handleSubmit} className="login-form">
@@ -179,7 +178,6 @@ const Homepage = () => {
                 </div>
               )}
               
-              {/* Exibe a mensagem de erro, se houver */}
               {error && <p className="error-message">{error}</p>}
 
               <button type="submit" className="login-button">

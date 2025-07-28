@@ -10,7 +10,7 @@ function LabCard({ lab, onEdit, onDelete }) {
 
     return (
         <article className="lab-card" onClick={handleCardClick} style={{ position: "relative" }}>
-            {/* Edit and Delete buttons */}
+            
             <div style={{ position: "absolute", top: 8, right: 8, display: "flex", gap: "8px", zIndex: 2 }}>
                 <button
                     className="lab-edit-btn"

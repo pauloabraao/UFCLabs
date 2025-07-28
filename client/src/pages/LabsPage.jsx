@@ -17,20 +17,20 @@ function LabsPage() {
   const [editLab, setEditLab] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  // New state for campuses and blocks
+  // Estado para campos e blocos
   const [campuses, setCampuses] = useState([]);
   const [blocks, setBlocks] = useState([]);
   const [selectedCampusId, setSelectedCampusId] = useState('');
   const [selectedBlockId, setSelectedBlockId] = useState(blockId || '');
 
-  // Fetch campuses on mount
+  // Buscar campus
   useEffect(() => {
     axios.get('http://localhost:3000/api/campuses')
       .then(res => setCampuses(res.data))
       .catch(() => setCampuses([]));
   }, []);
 
-  // Fetch blocks when campus changes
+  // Buscar blocos quando o campus mudar
   useEffect(() => {
     if (selectedCampusId) {
       axios.get(`http://localhost:3000/api/blocks?campus_id=${selectedCampusId}`)
@@ -42,7 +42,7 @@ function LabsPage() {
     setSelectedBlockId('');
   }, [selectedCampusId]);
 
-  // Fetch labs when block changes
+  // Buscar laboratórios quando o bloco mudar
   useEffect(() => {
     if (selectedBlockId) {
       setLoading(true);
@@ -56,7 +56,7 @@ function LabsPage() {
     }
   }, [selectedBlockId]);
 
-  // If blockId is in URL, set as selectedBlockId
+  // Se blockId estiver na URL, definir como selectedBlockId
   useEffect(() => {
     if (blockId) {
       setSelectedBlockId(blockId);
@@ -88,7 +88,6 @@ function LabsPage() {
     setIsModalOpen(false);
   };
 
-  // Edit handlers
   const handleEditLab = (lab) => {
     setEditLab(lab);
     setIsEditModalOpen(true);
@@ -126,14 +125,11 @@ function LabsPage() {
     setSelectedCampusId(campusId);
     setSelectedBlockId('');
     setLabs([]);
-    // Optionally, navigate to a route if needed
   };
 
   // Handle block select change
   const handleBlockChange = (blockId) => {
     setSelectedBlockId(blockId);
-    // Optionally, navigate to a route if needed
-    // navigate(`/blocks/${blockId}/labs`);
   };
 
   return (

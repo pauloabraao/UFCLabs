@@ -4,14 +4,14 @@ import { getAllUsers, createUser, getUserById, updateUser, deleteUser } from '..
 import { verifyToken, requireRole } from '../middleware/auth.js';
 import roles from '../enums/roles.js';
 
-// Public route - anyone can create a user (registration)
+// rotas publicas
 router.post('/', createUser);
 
-// Protected routes - require authentication
+// rotas protegidas
 router.get('/', verifyToken, getAllUsers);
 router.get('/:id', verifyToken, getUserById);
 
-// Admin only routes - require admin role
+// rotas protegidas - cargo de administrador apenas
 router.put('/:id', verifyToken, requireRole([roles.admin]), updateUser);
 router.delete('/:id', verifyToken, requireRole([roles.admin]), deleteUser);
 
