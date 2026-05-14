@@ -16,9 +16,9 @@ A4_HEIGHT = 11.69
 # Database configuration (replace with your credentials)
 config = {
     'user': 'root',
-    'password': 'dbadmin08',
+    'password': 'mysqladmin',
     'host': 'localhost',
-    'database': 'labssystem'
+    'database': 'LabsSystem'
 }
 
 def connect_to_db():
