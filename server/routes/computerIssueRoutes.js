@@ -1,11 +1,21 @@
-import express from 'express';
+import express from "express";
 const router = express.Router();
-import { getAllComputerIssues, createComputerIssue, getComputerIssueById, updateComputerIssue, deleteComputerIssue } from '../controllers/computerIssueController.js';
+import {
+  getAllComputerIssues,
+  createComputerIssue,
+  getComputerIssueById,
+  updateComputerIssue,
+  deleteComputerIssue,
+} from "../controllers/computerIssueController.js";
+import { verifyToken, requireRole } from "../middleware/auth.js";
 
-router.get('/', getAllComputerIssues);
-router.post('/', createComputerIssue);
-router.get('/:id', getComputerIssueById);
-router.put('/:id', updateComputerIssue);
-router.delete('/:id', deleteComputerIssue);
+// Public routes
+router.get("/", getAllComputerIssues);
+router.get("/:id", getComputerIssueById);
+
+// Protected routes - require authentication
+router.post("/", verifyToken, createComputerIssue);
+router.put("/:id", verifyToken, updateComputerIssue);
+router.delete("/:id", verifyToken, deleteComputerIssue);
 
 export default router;
