@@ -169,7 +169,8 @@ function LabsPage() {
         onBlockChange={handleBlockChange}
       />
       <main className="main-content">
-        {selectedCampusId && (
+        {/* Renderiza a busca apenas se um bloco estiver selecionado */}
+        {selectedBlockId && (
           <div className="filters-container">
             <input
               type="text"
