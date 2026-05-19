@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import Header from '../components/Header';
-import LabGrid from '../components/LabGrid';
-import AddLabModal from '../components/AddLabModal';
-import EditLabModal from '../components/EditLabModal';
-import './LabsPage.css';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import Header from "../components/Header";
+import LabGrid from "../components/LabGrid";
+import AddLabModal from "../components/AddLabModal";
+import EditLabModal from "../components/EditLabModal";
+import "./LabsPage.css";
+import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Typography, CircularProgress, Box } from "@mui/material";
 
@@ -20,34 +20,42 @@ function LabsPage() {
   // Estado para campos e blocos
   const [campuses, setCampuses] = useState([]);
   const [blocks, setBlocks] = useState([]);
-  const [selectedCampusId, setSelectedCampusId] = useState('');
-  const [selectedBlockId, setSelectedBlockId] = useState(blockId || '');
+  const [selectedCampusId, setSelectedCampusId] = useState("");
+  const [selectedBlockId, setSelectedBlockId] = useState(blockId || "");
+
+  // Estado para o termo de busca
+  const [termoBusca, setTermoBusca] = useState("");
 
   // Buscar campus
   useEffect(() => {
-    axios.get('http://localhost:3000/api/campuses')
-      .then(res => setCampuses(res.data))
+    axios
+      .get("http://localhost:3000/api/campuses")
+      .then((res) => setCampuses(res.data))
       .catch(() => setCampuses([]));
   }, []);
 
   // Buscar blocos quando o campus mudar
   useEffect(() => {
     if (selectedCampusId) {
-      axios.get(`http://localhost:3000/api/blocks?campus_id=${selectedCampusId}`)
-        .then(res => setBlocks(res.data))
+      axios
+        .get(`http://localhost:3000/api/blocks?campus_id=${selectedCampusId}`)
+        .then((res) => setBlocks(res.data))
         .catch(() => setBlocks([]));
     } else {
       setBlocks([]);
     }
-    setSelectedBlockId('');
+    setSelectedBlockId("");
   }, [selectedCampusId]);
 
   // Buscar laboratórios quando o bloco mudar
   useEffect(() => {
     if (selectedBlockId) {
       setLoading(true);
-      axios.get(`http://localhost:3000/api/laboratories?block_id=${selectedBlockId}`)
-        .then(res => setLabs(res.data))
+      axios
+        .get(
+          `http://localhost:3000/api/laboratories?block_id=${selectedBlockId}`,
+        )
+        .then((res) => setLabs(res.data))
         .catch(() => setLabs([]))
         .finally(() => setLoading(false));
     } else {
@@ -64,17 +72,18 @@ function LabsPage() {
   }, [blockId]);
 
   const handleAddLab = (novoLab) => {
-    axios.post('http://localhost:3000/api/laboratories', {
-      block_id: parseInt(selectedBlockId),
-      name: novoLab.name,
-      capacity: parseInt(novoLab.capacity),
-      num_computers: novoLab.num_computers
-    })
-      .then(res => {
+    axios
+      .post("http://localhost:3000/api/laboratories", {
+        block_id: parseInt(selectedBlockId),
+        name: novoLab.name,
+        capacity: parseInt(novoLab.capacity),
+        num_computers: novoLab.num_computers,
+      })
+      .then((res) => {
         setLabs([...labs, res.data]);
         setIsModalOpen(false);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Erro ao adicionar laboratório:", error);
         alert("Erro ao adicionar laboratório.");
       });
@@ -99,9 +108,15 @@ function LabsPage() {
   };
 
   const handleUpdateLab = (updatedLab) => {
-    axios.put(`http://localhost:3000/api/laboratories/${updatedLab.lab_id}`, updatedLab)
-      .then(res => {
-        setLabs(labs.map(l => l.lab_id === updatedLab.lab_id ? res.data : l));
+    axios
+      .put(
+        `http://localhost:3000/api/laboratories/${updatedLab.lab_id}`,
+        updatedLab,
+      )
+      .then((res) => {
+        setLabs(
+          labs.map((l) => (l.lab_id === updatedLab.lab_id ? res.data : l)),
+        );
         setIsEditModalOpen(false);
         setEditLab(null);
       })
@@ -109,10 +124,15 @@ function LabsPage() {
   };
 
   const handleDeleteLab = (lab) => {
-    if (window.confirm(`Tem certeza que deseja excluir o laboratório "${lab.name}"? Esta ação não pode ser desfeita.`)) {
-      axios.delete(`http://localhost:3000/api/laboratories/${lab.lab_id}`)
+    if (
+      window.confirm(
+        `Tem certeza que deseja excluir o laboratório "${lab.name}"? Esta ação não pode ser desfeita.`,
+      )
+    ) {
+      axios
+        .delete(`http://localhost:3000/api/laboratories/${lab.lab_id}`)
         .then(() => {
-          setLabs(labs.filter(l => l.lab_id !== lab.lab_id));
+          setLabs(labs.filter((l) => l.lab_id !== lab.lab_id));
           setIsEditModalOpen(false);
           setEditLab(null);
         })
@@ -123,7 +143,7 @@ function LabsPage() {
   // Handle campus select change
   const handleCampusChange = (campusId) => {
     setSelectedCampusId(campusId);
-    setSelectedBlockId('');
+    setSelectedBlockId("");
     setLabs([]);
   };
 
@@ -131,6 +151,11 @@ function LabsPage() {
   const handleBlockChange = (blockId) => {
     setSelectedBlockId(blockId);
   };
+
+  // Filtra laboratórios pelo termo de busca localmente
+  const labsFiltrados = labs.filter((lab) =>
+    lab.name.toLowerCase().includes(termoBusca.toLowerCase()),
+  );
 
   return (
     <>
@@ -143,30 +168,40 @@ function LabsPage() {
         onCampusChange={handleCampusChange}
         onBlockChange={handleBlockChange}
       />
-       <main className="main-content">
+      <main className="main-content">
+        {selectedCampusId && (
+          <div className="filters-container">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Buscar laboratório..."
+              value={termoBusca}
+              onChange={(e) => setTermoBusca(e.target.value)}
+            />
+          </div>
+        )}
+
         {loading ? (
-          
-          <Box className="loading-container"> 
+          <Box className="loading-container">
             <CircularProgress />
-            <Typography variant="h6" className="loading-text"> 
+            <Typography variant="h6" className="loading-text">
               Carregando laboratórios...
             </Typography>
           </Box>
+        ) : labsFiltrados.length === 0 && selectedBlockId ? (
+          <Typography variant="h6" sx={{ textAlign: "center", mt: 4 }}>
+            Nenhum laboratório encontrado.
+          </Typography>
+        ) : labsFiltrados.length === 0 && !selectedBlockId ? (
+          <Typography variant="h6" sx={{ textAlign: "center", mt: 4 }}>
+            Selecione um campus e um bloco para visualizar os laboratórios.
+          </Typography>
         ) : (
-         
-          labs.length === 0 && selectedBlockId ? (
-            <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
-              Nenhum laboratório encontrado para o bloco selecionado.
-            </Typography>
-          ) : labs.length === 0 && !selectedBlockId ? (
-             <Typography variant="h6" sx={{ textAlign: 'center', mt: 4 }}>
-               Selecione um campus e um bloco para visualizar os laboratórios.
-             </Typography>
-          ) : (
-            <LabGrid labs={labs}
+          <LabGrid
+            labs={labsFiltrados}
             onEditLab={handleEditLab}
-            onDeleteLab={handleDeleteLab} />
-          )
+            onDeleteLab={handleDeleteLab}
+          />
         )}
       </main>
       <AddLabModal
