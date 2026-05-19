@@ -83,15 +83,42 @@ body {
     margin: 0 auto;
 }
 
+.filters-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 2rem;
+    padding: 0 2rem;
+    width: 100%;
+}
+
+.search-input {
+    padding: 0.75rem 1rem;
+    background-color: #fff;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: #333;
+    border: 1px solid #e0e0e0;
+    height: 48px;
+    width: 100%;
+    max-width: 400px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+}
+
+.search-input:focus {
+    border-color: #58c4c4;
+    box-shadow: 0 0 0 2px rgba(88, 196, 196, 0.2);
+}
+
 .lab-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
-    
 }
 
 .lab-card {
-      background-color: #ffffff;
+    background-color: #ffffff;
     padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
@@ -155,9 +182,7 @@ body {
 .tag:hover {
     background-color: #cce9d5; 
     color: #555; 
-    
 }
-
 
 .modal {
     display: block;
@@ -257,14 +282,11 @@ body {
 
 .loading-text {
   margin-left: 16px; 
- 
 }
-
 
 .message-text {
   text-align: center;
   margin-top: 32px; 
- 
 }
 
 .back-link {
@@ -296,6 +318,7 @@ body {
     opacity: 0.7;
     transition: opacity 0.2s;
 }
+
 .lab-edit-btn:hover, .lab-delete-btn:hover {
     opacity: 1;
 }
