@@ -13,15 +13,22 @@ function ProgramPage() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Estado para o termo de busca
+  const [termoBusca, setTermoBusca] = useState("");
+
   const fetchPrograms = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:3000/api/computer-programs/computer/${computerId}`);
+      const res = await axios.get(
+        `http://localhost:3000/api/computer-programs/computer/${computerId}`,
+      );
       const installedPrograms = await Promise.all(
         res.data.map(async (cp) => {
-          const prog = await axios.get(`http://localhost:3000/api/programs/${cp.program_id}`);
+          const prog = await axios.get(
+            `http://localhost:3000/api/programs/${cp.program_id}`,
+          );
           return prog.data;
-        })
+        }),
       );
       setPrograms(installedPrograms);
     } catch {
@@ -46,12 +53,20 @@ function ProgramPage() {
   };
 
   const handleDeleteProgram = (program) => {
-  axios
-    .delete(`http://localhost:3000/api/computer-programs/${computerId}/${program.program_id}`)
-    .then(() => fetchPrograms())
-    .catch(() => alert("Erro ao remover programa."));
+    axios
+      .delete(
+        `http://localhost:3000/api/computer-programs/${computerId}/${program.program_id}`,
+      )
+      .then(() => fetchPrograms())
+      .catch(() => alert("Erro ao remover programa."));
   };
 
+  // Filtra programas pelo termo de busca localmente
+  const programasFiltrados = programs.filter(
+    (program) =>
+      program.name &&
+      program.name.toLowerCase().includes(termoBusca.toLowerCase()),
+  );
 
   return (
     <>
@@ -60,6 +75,17 @@ function ProgramPage() {
         onOpenAddProgram={() => setIsModalOpen(true)}
       />
       <main className="main-content">
+        {/* Container de filtros para a barra de busca */}
+        <div className="filters-container">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Buscar programa..."
+            value={termoBusca}
+            onChange={(e) => setTermoBusca(e.target.value)}
+          />
+        </div>
+
         <Typography variant="h5" gutterBottom>
           Programas Instalados no Computador {computerId}
         </Typography>
@@ -68,16 +94,16 @@ function ProgramPage() {
           <Box display="flex" justifyContent="center" mt={4}>
             <CircularProgress />
           </Box>
-        ) : programs.length === 0 ? (
+        ) : programasFiltrados.length === 0 ? (
           <Typography>Nenhum programa encontrado.</Typography>
         ) : (
           <div className="programs-list">
-            {programs.map((program) => (
+            {programasFiltrados.map((program) => (
               <ProgramCard
                 key={program.program_id}
                 program={program}
                 onDelete={handleDeleteProgram}
-/>
+              />
             ))}
           </div>
         )}
