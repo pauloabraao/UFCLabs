@@ -3,174 +3,209 @@ import TicketsHeader from "../components/TicketsHeader";
 import TicketsTable from "../components/TicketsTable";
 import AddTicketModal from "../components/AddTicketModal";
 import "./TicketsPage.css";
-import axios from "axios";
+import api from "../utils/api";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 
 function TicketsPage() {
-  const [loading, setLoading] = useState(true);
-  const [tickets, setTickets] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [statusFilter, setStatusFilter] = useState("todos");
-  const [computers, setComputers] = useState([]);
-  const [laboratories, setLaboratories] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [tickets, setTickets] = useState([]);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [statusFilter, setStatusFilter] = useState("todos");
+	const [currentPage, setCurrentPage] = useState(1);
+	const [computers, setComputers] = useState([]);
+	const [laboratories, setLaboratories] = useState([]);
 
-  const components = [
-    { id: 1, name: "Computador" },
-    { id: 2, name: "Teclado" },
-    { id: 3, name: "Mouse" },
-    { id: 4, name: "Monitor" },
-    { id: 5, name: "Gabinete" },
-    { id: 6, name: "Outros" },
-  ];
+	const ITEMS_PER_PAGE = 10;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [ticketsRes, computersRes, labsRes] = await Promise.all([
-          axios.get("http://localhost:3000/api/computer-issues"),
-          axios.get("http://localhost:3000/api/computers"),
-          axios.get("http://localhost:3000/api/laboratories"),
-        ]);
+	const components = [
+		{ id: 1, name: "Monitor", value: "Monitor" },
+		{ id: 2, name: "Teclado", value: "teclado" },
+		{ id: 3, name: "Mouse", value: "mouse" },
+		{ id: 4, name: "Gabinete", value: "gabinete" },
+		{ id: 5, name: "Internet", value: "internet" },
+		{ id: 6, name: "Outros", value: "outros" },
+	];
 
-        setTickets(ticketsRes.data);
-        setComputers(computersRes.data);
-        setLaboratories(labsRes.data);
-      } catch (error) {
-        console.error("Erro ao buscar dados:", error);
-        alert("Erro ao carregar dados");
-      } finally {
-        setLoading(false);
-      }
-    };
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const [ticketsRes, computersRes, labsRes] = await Promise.all([
+					api.get("/computer-issues"),
+					api.get("/computers"),
+					api.get("/laboratories"),
+				]);
 
-    fetchData();
-  }, []);
+				setTickets(ticketsRes.data);
+				setComputers(computersRes.data);
+				setLaboratories(labsRes.data);
+			} catch (error) {
+				console.error("Erro ao buscar dados:", error);
+				alert("Erro ao carregar dados");
+			} finally {
+				setLoading(false);
+			}
+		};
 
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
+		fetchData();
+	}, []);
 
-  const handleAddTicket = (newTicket) => {
-    const componentName = components
-      .find((c) => c.id === newTicket.component_id)
-      ?.name.toLowerCase();
+	useEffect(() => {
+		setCurrentPage(1);
+	}, [statusFilter]);
 
-    const payload = {
-      computer_id: newTicket.computer_id,
-      reported_by: 1,
-      description: newTicket.description,
-      date_reported: new Date().toISOString().split("T")[0],
-      status: "aberto",
-      component: componentName || "outros",
-    };
+	const handleOpenModal = () => setIsModalOpen(true);
+	const handleCloseModal = () => setIsModalOpen(false);
 
-    axios
-      .post("http://localhost:3000/api/computer-issues", payload)
-      .then((res) => {
-        setTickets([...tickets, res.data]);
-        setIsModalOpen(false);
-      })
-      .catch(() => alert("Erro ao abrir chamado."));
-  };
+	const handleAddTicket = newTicket => {
+		const component = components.find(c => c.id === newTicket.component_id);
+		const componentValue = component?.value || "outros";
+		const computerId = Number(newTicket.computer_id);
 
-  const handleEditTicket = async (issueId, newStatus) => {
-    try {
-      const ticket = tickets.find((t) => t.issue_id === issueId);
-      if (!ticket) return;
+		const payload = {
+			computer_id: Number.isFinite(computerId)
+				? computerId
+				: newTicket.computer_id,
+			reported_by: 1,
+			description: newTicket.description,
+			date_reported: new Date().toISOString().split("T")[0],
+			status: "aberto",
+			component: componentValue,
+		};
 
-      const payload = {
-        computer_id: ticket.computer_id,
-        reported_by: ticket.reported_by,
-        description: ticket.description,
-        date_reported: ticket.date_reported,
-        status: newStatus,
-        component: ticket.component,
-      };
+		api
+			.post("/computer-issues", payload)
+			.then(res => {
+				setTickets([...tickets, res.data]);
+				setIsModalOpen(false);
+			})
+			.catch(() => alert("Erro ao abrir chamado."));
+	};
 
-      const response = await axios.put(
-        `http://localhost:3000/api/computer-issues/${issueId}`,
-        payload,
-      );
+	const handleEditTicket = async (issueId, newStatus) => {
+		try {
+			const ticket = tickets.find(t => t.issue_id === issueId);
+			if (!ticket) return;
 
-      setTickets(
-        tickets.map((t) => (t.issue_id === issueId ? response.data : t)),
-      );
-      alert("Status atualizado com sucesso!");
-    } catch (error) {
-      console.error("Erro ao atualizar chamado:", error);
-      alert("Erro ao atualizar chamado");
-    }
-  };
+			const payload = {
+				computer_id: ticket.computer_id,
+				reported_by: ticket.reported_by,
+				description: ticket.description,
+				date_reported: ticket.date_reported,
+				status: newStatus,
+				component: ticket.component,
+			};
 
-  const handleDeleteTicket = async (issueId) => {
-    try {
-      await axios.delete(
-        `http://localhost:3000/api/computer-issues/${issueId}`,
-      );
-      setTickets(tickets.filter((t) => t.issue_id !== issueId));
-      alert("Chamado deletado com sucesso!");
-    } catch (error) {
-      console.error("Erro ao deletar chamado:", error);
-      alert("Erro ao deletar chamado");
-    }
-  };
+			const response = await api.put(`/computer-issues/${issueId}`, payload);
 
-  const filteredTickets =
-    statusFilter === "todos"
-      ? tickets
-      : tickets.filter(
-          (ticket) => ticket.status.toLowerCase() === statusFilter,
-        );
+			setTickets(
+				tickets.map(t => (t.issue_id === issueId ? response.data : t))
+			);
+			alert("Status atualizado com sucesso!");
+		} catch (error) {
+			console.error("Erro ao atualizar chamado:", error);
+			alert("Erro ao atualizar chamado");
+		}
+	};
 
-  return (
-    <>
-      <TicketsHeader />
-      <Button
-        variant="contained"
-        color="primary"
-        startIcon={<AddIcon />}
-        className="fab-inferior-direito"
-        onClick={handleOpenModal}
-      >
-        Abrir chamado
-      </Button>
+	const handleDeleteTicket = async issueId => {
+		try {
+			await api.delete(`/computer-issues/${issueId}`);
+			setTickets(tickets.filter(t => t.issue_id !== issueId));
+			alert("Chamado deletado com sucesso!");
+		} catch (error) {
+			console.error("Erro ao deletar chamado:", error);
+			alert("Erro ao deletar chamado");
+		}
+	};
 
-      <main className="main-content">
-        <div className="filtro-status">
-          {["todos", "aberto", "em andamento", "resolvido"].map((status) => (
-            <button
-              key={status}
-              onClick={() => setStatusFilter(status)}
-              className={`filtro-botao ${statusFilter === status ? "ativo" : ""}`}
-            >
-              {status.charAt(0).toUpperCase() + status.slice(1)}
-            </button>
-          ))}
-        </div>
+	const filteredTickets =
+		statusFilter === "todos"
+			? tickets
+			: tickets.filter(ticket => ticket.status.toLowerCase() === statusFilter);
 
-        {loading ? (
-          <Typography>Carregando...</Typography>
-        ) : (
-          <TicketsTable
-            tickets={filteredTickets}
-            computers={computers}
-            laboratories={laboratories}
-            onEdit={handleEditTicket}
-            onDelete={handleDeleteTicket}
-          />
-        )}
-      </main>
+	const totalPages = Math.max(
+		1,
+		Math.ceil(filteredTickets.length / ITEMS_PER_PAGE)
+	);
 
-      <AddTicketModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onAddTicket={handleAddTicket}
-        computers={computers}
-        components={components}
-      />
-    </>
-  );
+	const paginatedTickets = filteredTickets.slice(
+		(currentPage - 1) * ITEMS_PER_PAGE,
+		currentPage * ITEMS_PER_PAGE
+	);
+
+	return (
+		<>
+			<TicketsHeader />
+			<Button
+				variant="contained"
+				color="primary"
+				startIcon={<AddIcon />}
+				className="fab-inferior-direito"
+				onClick={handleOpenModal}
+			>
+				Abrir chamado
+			</Button>
+
+			<main className="main-content">
+				<div className="filtro-status">
+					{["todos", "aberto", "em andamento", "resolvido"].map(status => (
+						<button
+							key={status}
+							onClick={() => setStatusFilter(status)}
+							className={`filtro-botao ${statusFilter === status ? "ativo" : ""}`}
+						>
+							{status.charAt(0).toUpperCase() + status.slice(1)}
+						</button>
+					))}
+				</div>
+
+				{loading ? (
+					<Typography>Carregando...</Typography>
+				) : (
+					<>
+						<TicketsTable
+							tickets={paginatedTickets}
+							computers={computers}
+							laboratories={laboratories}
+							onEdit={handleEditTicket}
+							onDelete={handleDeleteTicket}
+						/>
+						<div className="pagination-controls">
+							<Button
+								variant="outlined"
+								onClick={() => setCurrentPage(page => Math.max(page - 1, 1))}
+								disabled={currentPage === 1}
+							>
+								Anterior
+							</Button>
+							<span className="pagination-info">
+								Página {currentPage} de {totalPages}
+							</span>
+							<Button
+								variant="outlined"
+								onClick={() =>
+									setCurrentPage(page => Math.min(page + 1, totalPages))
+								}
+								disabled={currentPage === totalPages}
+							>
+								Próxima
+							</Button>
+						</div>
+					</>
+				)}
+			</main>
+
+			<AddTicketModal
+				isOpen={isModalOpen}
+				onClose={handleCloseModal}
+				onAddTicket={handleAddTicket}
+				computers={computers}
+				components={components}
+			/>
+		</>
+	);
 }
 
 export default TicketsPage;
