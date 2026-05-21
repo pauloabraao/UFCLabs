@@ -3,7 +3,7 @@ import TicketsHeader from "../components/TicketsHeader";
 import TicketsTable from "../components/TicketsTable";
 import AddTicketModal from "../components/AddTicketModal";
 import "./TicketsPage.css";
-import axios from "axios";
+import api from "../utils/api";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
@@ -20,21 +20,21 @@ function TicketsPage() {
 	const ITEMS_PER_PAGE = 10;
 
 	const components = [
-		{ id: 1, name: "Computador" },
-		{ id: 2, name: "Teclado" },
-		{ id: 3, name: "Mouse" },
-		{ id: 4, name: "Monitor" },
-		{ id: 5, name: "Gabinete" },
-		{ id: 6, name: "Outros" },
+		{ id: 1, name: "Monitor", value: "Monitor" },
+		{ id: 2, name: "Teclado", value: "teclado" },
+		{ id: 3, name: "Mouse", value: "mouse" },
+		{ id: 4, name: "Gabinete", value: "gabinete" },
+		{ id: 5, name: "Internet", value: "internet" },
+		{ id: 6, name: "Outros", value: "outros" },
 	];
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const [ticketsRes, computersRes, labsRes] = await Promise.all([
-					axios.get("http://localhost:3000/api/computer-issues"),
-					axios.get("http://localhost:3000/api/computers"),
-					axios.get("http://localhost:3000/api/laboratories"),
+					api.get("/computer-issues"),
+					api.get("/computers"),
+					api.get("/laboratories"),
 				]);
 
 				setTickets(ticketsRes.data);
@@ -59,21 +59,23 @@ function TicketsPage() {
 	const handleCloseModal = () => setIsModalOpen(false);
 
 	const handleAddTicket = newTicket => {
-		const componentName = components
-			.find(c => c.id === newTicket.component_id)
-			?.name.toLowerCase();
+		const component = components.find(c => c.id === newTicket.component_id);
+		const componentValue = component?.value || "outros";
+		const computerId = Number(newTicket.computer_id);
 
 		const payload = {
-			computer_id: newTicket.computer_id,
+			computer_id: Number.isFinite(computerId)
+				? computerId
+				: newTicket.computer_id,
 			reported_by: 1,
 			description: newTicket.description,
 			date_reported: new Date().toISOString().split("T")[0],
 			status: "aberto",
-			component: componentName || "outros",
+			component: componentValue,
 		};
 
-		axios
-			.post("http://localhost:3000/api/computer-issues", payload)
+		api
+			.post("/computer-issues", payload)
 			.then(res => {
 				setTickets([...tickets, res.data]);
 				setIsModalOpen(false);
@@ -95,10 +97,7 @@ function TicketsPage() {
 				component: ticket.component,
 			};
 
-			const response = await axios.put(
-				`http://localhost:3000/api/computer-issues/${issueId}`,
-				payload
-			);
+			const response = await api.put(`/computer-issues/${issueId}`, payload);
 
 			setTickets(
 				tickets.map(t => (t.issue_id === issueId ? response.data : t))
@@ -112,9 +111,7 @@ function TicketsPage() {
 
 	const handleDeleteTicket = async issueId => {
 		try {
-			await axios.delete(
-				`http://localhost:3000/api/computer-issues/${issueId}`
-			);
+			await api.delete(`/computer-issues/${issueId}`);
 			setTickets(tickets.filter(t => t.issue_id !== issueId));
 			alert("Chamado deletado com sucesso!");
 		} catch (error) {
