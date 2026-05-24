@@ -5,10 +5,6 @@ import "../pages/ProgramPage.css";
 function ProgramHeader({ computerId }) {
   const navigate = useNavigate();
 
-  const handleBack = () => {
-    navigate("/labs");
-  };
-
   const handleLogout = () => {
     if (window.confirm("Você tem certeza que deseja sair?")) {
       navigate("/");
@@ -22,7 +18,7 @@ function ProgramHeader({ computerId }) {
           <button
             className="icon-btn"
             aria-label="Voltar"
-            onClick={handleBack}
+            onClick={() => navigate(-1)}
             style={{ background: "none", border: "none", cursor: "pointer" }}
           >
             <i className="fas fa-arrow-left"></i>
