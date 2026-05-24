@@ -43,14 +43,19 @@ function ProgramPage() {
     fetchPrograms(true);
   }, [computerId]);
 
-  const handleAddProgram = (data) => {
-    axios
-      .post("http://localhost:3000/api/computer-programs", data)
-      .then(() => {
-        fetchPrograms(false); // Atualiza a lista após adição
-        setIsModalOpen(false);
-      })
-      .catch(() => alert("Erro ao adicionar programa."));
+  const handleAddProgram = async (data) => {
+    try {
+      await axios.post("http://localhost:3000/api/computer-programs", data);
+      await fetchPrograms(false);
+      setIsModalOpen(false);
+    } catch (err) {
+      const msg =
+        err.response?.status >= 500
+          ? "Erro no servidor. Tente novamente mais tarde."
+          : "Erro ao adicionar programa. Verifique os dados.";
+      alert(msg);
+      throw err;
+    }
   };
 
   const handleDeleteProgram = (program) => {
@@ -125,6 +130,7 @@ function ProgramPage() {
         onClose={() => setIsModalOpen(false)}
         computerId={computerId}
         onAddProgram={handleAddProgram}
+        installedPrograms={programs}
       />
     </>
   );
