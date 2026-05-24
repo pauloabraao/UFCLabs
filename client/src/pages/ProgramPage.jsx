@@ -12,12 +12,13 @@ function ProgramPage() {
   const [programs, setPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
   // Estado para o termo de busca
   const [termoBusca, setTermoBusca] = useState("");
 
-  const fetchPrograms = async () => {
-    setLoading(true);
+  const fetchPrograms = async (showLoading = true) => {
+    if (showLoading) setLoading(true);
     try {
       const res = await axios.get(
         `http://localhost:3000/api/computer-programs/computer/${computerId}`,
@@ -39,26 +40,35 @@ function ProgramPage() {
   };
 
   useEffect(() => {
-    fetchPrograms();
+    fetchPrograms(true);
   }, [computerId]);
 
   const handleAddProgram = (data) => {
     axios
       .post("http://localhost:3000/api/computer-programs", data)
       .then(() => {
-        fetchPrograms(); // Atualiza a lista após adição
+        fetchPrograms(false); // Atualiza a lista após adição
         setIsModalOpen(false);
       })
       .catch(() => alert("Erro ao adicionar programa."));
   };
 
   const handleDeleteProgram = (program) => {
-    axios
-      .delete(
-        `http://localhost:3000/api/computer-programs/${computerId}/${program.program_id}`,
-      )
-      .then(() => fetchPrograms())
-      .catch(() => alert("Erro ao remover programa."));
+    setDeletingId(program.program_id);
+    setTimeout(() => {
+      axios
+        .delete(
+          `http://localhost:3000/api/computer-programs/${computerId}/${program.program_id}`,
+        )
+        .then(() => {
+          setDeletingId(null);
+          fetchPrograms(false);
+        })
+        .catch(() => {
+          setDeletingId(null);
+          alert("Erro ao remover programa.");
+        });
+    }, 300);
   };
 
   // Filtra programas pelo termo de busca localmente
@@ -103,6 +113,7 @@ function ProgramPage() {
                 key={program.program_id}
                 program={program}
                 onDelete={handleDeleteProgram}
+                isDeleting={deletingId === program.program_id}
               />
             ))}
           </div>
