@@ -99,20 +99,26 @@ function ProgramPage() {
         <div className="filters-container">
           <div className="filters-row">
             <div className="search-inputs-wrapper">
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Buscar por nome..."
-                value={termoBusca}
-                onChange={(e) => setTermoBusca(e.target.value)}
-              />
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Buscar por versão..."
-                value={termoVersao}
-                onChange={(e) => setTermoVersao(e.target.value)}
-              />
+              <div className="search-input-group">
+                <label className="search-label">Nome</label>
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Buscar por nome..."
+                  value={termoBusca}
+                  onChange={(e) => setTermoBusca(e.target.value)}
+                />
+              </div>
+              <div className="search-input-group">
+                <label className="search-label">Versão</label>
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Buscar por versão..."
+                  value={termoVersao}
+                  onChange={(e) => setTermoVersao(e.target.value)}
+                />
+              </div>
             </div>
             <Button
               variant="contained"

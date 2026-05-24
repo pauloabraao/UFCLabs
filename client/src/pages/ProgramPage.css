@@ -23,6 +23,7 @@
 .filters-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
   width: 100%;
   max-width: 1300px;
@@ -33,6 +34,21 @@
   gap: 1rem;
   flex: 1;
   max-width: 700px;
+}
+
+.search-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 180px;
+}
+
+.search-label {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 500;
+  padding-left: 0.25rem;
 }
 
 .search-inputs-wrapper .search-input {
