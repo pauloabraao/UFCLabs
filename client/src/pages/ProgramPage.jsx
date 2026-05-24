@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { Box, Typography, CircularProgress } from "@mui/material";
+import { Box, Typography, CircularProgress, Button } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import ProgramCard from "../components/ProgramCard";
 import ProgramHeader from "../components/ProgramHeader";
 import AddProgramModal from "../components/AddProgramModal";
@@ -14,8 +15,9 @@ function ProgramPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
 
-  // Estado para o termo de busca
+  // Estado para os termos de busca
   const [termoBusca, setTermoBusca] = useState("");
+  const [termoVersao, setTermoVersao] = useState("");
 
   const fetchPrograms = async (showLoading = true) => {
     if (showLoading) setLoading(true);
@@ -76,29 +78,59 @@ function ProgramPage() {
     }, 300);
   };
 
-  // Filtra programas pelo termo de busca localmente
-  const programasFiltrados = programs.filter(
-    (program) =>
-      program.name &&
-      program.name.toLowerCase().includes(termoBusca.toLowerCase()),
-  );
+  // Filtra programas pelo nome e versão localmente
+  const programasFiltrados = programs.filter((program) => {
+    const matchNome =
+      !termoBusca ||
+      (program.name &&
+        program.name.toLowerCase().includes(termoBusca.toLowerCase()));
+    const matchVersao =
+      !termoVersao ||
+      (program.version &&
+        program.version.toLowerCase().includes(termoVersao.toLowerCase()));
+    return matchNome && matchVersao;
+  });
 
   return (
     <>
-      <ProgramHeader
-        computerId={computerId}
-        onOpenAddProgram={() => setIsModalOpen(true)}
-      />
+      <ProgramHeader computerId={computerId} />
       <main className="main-content">
         {/* Container de filtros para a barra de busca */}
         <div className="filters-container">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Buscar programa..."
-            value={termoBusca}
-            onChange={(e) => setTermoBusca(e.target.value)}
-          />
+          <div className="filters-row">
+            <div className="search-inputs-wrapper">
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Buscar por nome..."
+                value={termoBusca}
+                onChange={(e) => setTermoBusca(e.target.value)}
+              />
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Buscar por versão..."
+                value={termoVersao}
+                onChange={(e) => setTermoVersao(e.target.value)}
+              />
+            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={() => setIsModalOpen(true)}
+              sx={{
+                borderRadius: "28px",
+                textTransform: "none",
+                padding: "10px 24px",
+                fontSize: "0.95rem",
+                whiteSpace: "nowrap",
+                flexShrink: 0,
+              }}
+            >
+              Novo Programa
+            </Button>
+          </div>
         </div>
 
         <Typography variant="h5" gutterBottom>
