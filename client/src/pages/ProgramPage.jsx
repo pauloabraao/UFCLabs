@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { Box, Typography, CircularProgress } from "@mui/material";
+import { Box, Typography, CircularProgress, Button } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import ProgramCard from "../components/ProgramCard";
 import ProgramHeader from "../components/ProgramHeader";
 import AddProgramModal from "../components/AddProgramModal";
@@ -12,12 +13,14 @@ function ProgramPage() {
   const [programs, setPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
-  // Estado para o termo de busca
+  // Estado para os termos de busca
   const [termoBusca, setTermoBusca] = useState("");
+  const [termoVersao, setTermoVersao] = useState("");
 
-  const fetchPrograms = async () => {
-    setLoading(true);
+  const fetchPrograms = async (showLoading = true) => {
+    if (showLoading) setLoading(true);
     try {
       const res = await axios.get(
         `http://localhost:3000/api/computer-programs/computer/${computerId}`,
@@ -39,51 +42,101 @@ function ProgramPage() {
   };
 
   useEffect(() => {
-    fetchPrograms();
+    fetchPrograms(true);
   }, [computerId]);
 
-  const handleAddProgram = (data) => {
-    axios
-      .post("http://localhost:3000/api/computer-programs", data)
-      .then(() => {
-        fetchPrograms(); // Atualiza a lista após adição
-        setIsModalOpen(false);
-      })
-      .catch(() => alert("Erro ao adicionar programa."));
+  const handleAddProgram = async (data) => {
+    try {
+      await axios.post("http://localhost:3000/api/computer-programs", data);
+      await fetchPrograms(false);
+      setIsModalOpen(false);
+    } catch (err) {
+      const msg =
+        err.response?.status >= 500
+          ? "Erro no servidor. Tente novamente mais tarde."
+          : "Erro ao adicionar programa. Verifique os dados.";
+      alert(msg);
+      throw err;
+    }
   };
 
   const handleDeleteProgram = (program) => {
-    axios
-      .delete(
-        `http://localhost:3000/api/computer-programs/${computerId}/${program.program_id}`,
-      )
-      .then(() => fetchPrograms())
-      .catch(() => alert("Erro ao remover programa."));
+    setDeletingId(program.program_id);
+    setTimeout(() => {
+      axios
+        .delete(
+          `http://localhost:3000/api/computer-programs/${computerId}/${program.program_id}`,
+        )
+        .then(() => {
+          setDeletingId(null);
+          fetchPrograms(false);
+        })
+        .catch(() => {
+          setDeletingId(null);
+          alert("Erro ao remover programa.");
+        });
+    }, 300);
   };
 
-  // Filtra programas pelo termo de busca localmente
-  const programasFiltrados = programs.filter(
-    (program) =>
-      program.name &&
-      program.name.toLowerCase().includes(termoBusca.toLowerCase()),
-  );
+  // Filtra programas pelo nome e versão localmente
+  const programasFiltrados = programs.filter((program) => {
+    const matchNome =
+      !termoBusca ||
+      (program.name &&
+        program.name.toLowerCase().includes(termoBusca.toLowerCase()));
+    const matchVersao =
+      !termoVersao ||
+      (program.version &&
+        program.version.toLowerCase().includes(termoVersao.toLowerCase()));
+    return matchNome && matchVersao;
+  });
 
   return (
     <>
-      <ProgramHeader
-        computerId={computerId}
-        onOpenAddProgram={() => setIsModalOpen(true)}
-      />
+      <ProgramHeader computerId={computerId} />
       <main className="main-content">
         {/* Container de filtros para a barra de busca */}
         <div className="filters-container">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Buscar programa..."
-            value={termoBusca}
-            onChange={(e) => setTermoBusca(e.target.value)}
-          />
+          <div className="filters-row">
+            <div className="search-inputs-wrapper">
+              <div className="search-input-group">
+                <label className="search-label">Nome</label>
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Buscar por nome..."
+                  value={termoBusca}
+                  onChange={(e) => setTermoBusca(e.target.value)}
+                />
+              </div>
+              <div className="search-input-group">
+                <label className="search-label">Versão</label>
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Buscar por versão..."
+                  value={termoVersao}
+                  onChange={(e) => setTermoVersao(e.target.value)}
+                />
+              </div>
+            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={() => setIsModalOpen(true)}
+              sx={{
+                borderRadius: "28px",
+                textTransform: "none",
+                padding: "10px 24px",
+                fontSize: "0.95rem",
+                whiteSpace: "nowrap",
+                flexShrink: 0,
+              }}
+            >
+              Novo Programa
+            </Button>
+          </div>
         </div>
 
         <Typography variant="h5" gutterBottom>
@@ -103,6 +156,7 @@ function ProgramPage() {
                 key={program.program_id}
                 program={program}
                 onDelete={handleDeleteProgram}
+                isDeleting={deletingId === program.program_id}
               />
             ))}
           </div>
@@ -114,6 +168,7 @@ function ProgramPage() {
         onClose={() => setIsModalOpen(false)}
         computerId={computerId}
         onAddProgram={handleAddProgram}
+        installedPrograms={programs}
       />
     </>
   );
