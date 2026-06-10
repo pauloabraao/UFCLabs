@@ -14,6 +14,11 @@ const Program = db.define('Program', {
   version: {
     type: DataTypes.STRING(50),
     allowNull: false
+  },
+  active: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+    allowNull: false
   }
 }, {
   tableName: 'Program',
