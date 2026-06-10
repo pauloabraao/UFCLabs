@@ -26,6 +26,11 @@ const swaggerOptions = {
         description: 'Servidor de Produção'
       }
     ],
+    security: [
+      {
+        bearerAuth: []
+      }
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
