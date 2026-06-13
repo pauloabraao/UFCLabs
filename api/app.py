@@ -16,7 +16,7 @@ A4_HEIGHT = 11.69
 # Database configuration (replace with your credentials)
 config = {
     'user': 'root',
-    'password': 'mysqladmin',
+    'password': '8962', #'mysqladmin'
     'host': 'localhost',
     'database': 'LabsSystem'
 }
@@ -33,7 +33,7 @@ def generate_eda_report():
     # Connect to the database
     conn = connect_to_db()
     if conn is None:
-        return None
+        return None, None
     
     # Create PDF in memory
     buffer = io.BytesIO()
