@@ -1,13 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function Header({
-  onOpenModal,
-  campuses = [],
-  blocks = [],
-  onCampusChange,
-  onBlockChange,
-}) {
+function Header() {
   const navigate = useNavigate();
 
   const handleBack = () => {

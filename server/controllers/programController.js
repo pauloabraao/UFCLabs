@@ -1,5 +1,17 @@
 import Program from '../models/Program.js';
 
+// Função auxiliar para validação de entrada
+const validateProgramData = (name, version) => {
+  const errors = [];
+  if (!name || typeof name !== 'string' || name.trim() === '') {
+    errors.push('O nome do programa é obrigatório e deve ser um texto válido.');
+  }
+  if (!version || typeof version !== 'string' || version.trim() === '') {
+    errors.push('A versão do programa é obrigatória e deve ser um texto válido.');
+  }
+  return errors;
+};
+
 /**
  * @swagger
  * /api/programs:
@@ -21,7 +33,9 @@ import Program from '../models/Program.js';
  */
 export const getAllPrograms = async (req, res) => {
   try {
-    const programs = await Program.findAll();
+    const programs = await Program.findAll({
+      where: { active: true }
+    });
     res.json(programs);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -68,7 +82,28 @@ export const getAllPrograms = async (req, res) => {
 export const createProgram = async (req, res) => {
   try {
     const { name, version } = req.body;
-    const newProgram = await Program.create({ name, version });
+
+    const errors = validateProgramData(name, version);
+    if (errors.length > 0) {
+      return res.status(400).json({ errors });
+    }
+
+    const existingProgram = await Program.findOne({ 
+      where: { name: name.trim(), version: version.trim() } 
+    });
+
+    if (existingProgram) {
+      if (!existingProgram.active) {
+         return res.status(409).json({ error: 'Um programa com este nome e versão já existe, mas foi removido.' });
+      }
+      return res.status(409).json({ error: 'Já existe um programa ativo com este nome e versão.' });
+    }
+
+    const newProgram = await Program.create({ 
+      name: name.trim(), 
+      version: version.trim(),
+      active: true 
+    });
     res.status(201).json(newProgram);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -105,7 +140,7 @@ export const createProgram = async (req, res) => {
 export const getProgramById = async (req, res) => {
   try {
     const program = await Program.findByPk(req.params.id);
-    if (!program) {
+    if (!program || !program.active) {
       return res.status(404).json({ error: 'Program not found' });
     }
     res.json(program);
@@ -163,11 +198,26 @@ export const getProgramById = async (req, res) => {
 export const updateProgram = async (req, res) => {
   try {
     const { name, version } = req.body;
+
+    const errors = validateProgramData(name, version);
+    if (errors.length > 0) {
+      return res.status(400).json({ errors });
+    }
+
     const program = await Program.findByPk(req.params.id);
-    if (!program) {
+    if (!program || !program.active) {
       return res.status(404).json({ error: 'Program not found' });
     }
-    await program.update({ name, version });
+
+    const existingProgram = await Program.findOne({ 
+      where: { name: name.trim(), version: version.trim() } 
+    });
+
+    if (existingProgram && existingProgram.program_id !== parseInt(req.params.id)) {
+      return res.status(409).json({ error: 'Já existe outro programa com este nome e versão.' });
+    }
+
+    await program.update({ name: name.trim(), version: version.trim() });
     res.json(program);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -208,10 +258,12 @@ export const updateProgram = async (req, res) => {
 export const deleteProgram = async (req, res) => {
   try {
     const program = await Program.findByPk(req.params.id);
-    if (!program) {
+    if (!program || !program.active) {
       return res.status(404).json({ error: 'Program not found' });
     }
-    await program.destroy();
+    
+    // Soft delete: apenas atualiza o status active para false
+    await program.update({ active: false });
     res.json({ message: 'Program deleted' });
   } catch (error) {
     res.status(500).json({ error: error.message });
