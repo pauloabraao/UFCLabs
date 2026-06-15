@@ -87,7 +87,7 @@ const Homepage = () => {
       {/* Logo no canto superior esquerdo */}
       <div className="logo-container">
         <img 
-          src="../../assets/logo01.png" 
+          src="./assets/logo01.png" 
           alt="Logo da Instituição" 
           className="institutional-logo"
         />
@@ -99,7 +99,7 @@ const Homepage = () => {
         <div className="image-half">
           <div className="image-overlay"></div>
           <img 
-            src="../../assets/background.jpg" 
+            src="./assets/background.jpg" 
             alt="Alunos utilizando computadores" 
             className="institutional-image"
           />

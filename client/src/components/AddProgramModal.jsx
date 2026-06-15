@@ -28,7 +28,7 @@ function AddProgramModal({ isOpen, onClose, computerId, onAddProgram, installedP
         );
       })
       .catch(() => setAvailablePrograms([]));
-  }, [isOpen]);
+  }, [isOpen, installedPrograms]);
 
   const handleClose = () => {
     if (!submitting) onClose();

@@ -53,11 +53,6 @@ function ComputersPage() {
       .catch(() => alert("Erro ao adicionar computador."));
   };
 
-  const handleCardClick = (computer) => {
-    setComputerToEdit(computer);
-    setEditModalOpen(true);
-  };
-
   const handleEditComputer = (updatedComputer) => {
     axios
       .put(`http://localhost:3000/api/computers/${updatedComputer.computer_id}`, updatedComputer)

@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import "../pages/ComputersPage.css";
 
 // Header for ComputersPage

@@ -5,12 +5,11 @@ import AddLabModal from "../components/AddLabModal";
 import EditLabModal from "../components/EditLabModal";
 import "./LabsPage.css";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Typography, CircularProgress, Box } from "@mui/material";
 
 function LabsPage() {
   const { blockId } = useParams();
-  const navigate = useNavigate();
   const [labs, setLabs] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
