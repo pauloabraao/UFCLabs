@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import ComputerCard from "../components/ComputerCard";
 import ComputersHeader from "../components/ComputersHeader";
 import { Container, Typography } from "@mui/material";

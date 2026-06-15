@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Box, Typography, CircularProgress, Button } from "@mui/material";
@@ -19,7 +19,7 @@ function ProgramPage() {
   const [termoBusca, setTermoBusca] = useState("");
   const [termoVersao, setTermoVersao] = useState("");
 
-  const fetchPrograms = async (showLoading = true) => {
+  const fetchPrograms = useCallback(async (showLoading = true) => {
     if (showLoading) setLoading(true);
     try {
       const res = await axios.get(
@@ -39,11 +39,11 @@ function ProgramPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [computerId]);
 
   useEffect(() => {
     fetchPrograms(true);
-  }, [computerId]);
+  }, [fetchPrograms]);
 
   const handleAddProgram = async (data) => {
     try {

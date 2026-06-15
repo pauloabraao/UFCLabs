@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function LabCard({ lab, onEdit, onDelete }) {
+function LabCard({ lab, onEdit }) {
     const navigate = useNavigate();
 
     const handleCardClick = () => {
