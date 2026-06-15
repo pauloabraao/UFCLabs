@@ -16,7 +16,7 @@ A4_HEIGHT = 11.69
 # Database configuration (replace with your credentials)
 config = {
     'user': 'root',
-    'password': '8962', #'mysqladmin'
+    'password': 'mysqladmin', #'mysqladmin'
     'host': 'localhost',
     'database': 'LabsSystem'
 }
