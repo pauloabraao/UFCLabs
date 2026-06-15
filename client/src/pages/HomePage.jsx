@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './Homepage.css';
 import api from '../utils/api.js';
 import { useNavigate } from 'react-router-dom';
+import logoImg from '../../assets/logo01.png';
+import backgroundImg from '../../assets/background.jpg';
 
 const Homepage = () => {
   const [isLogin, setIsLogin] = useState(true); // Estado para controlar se é login ou sign in
@@ -87,7 +89,7 @@ const Homepage = () => {
       {/* Logo no canto superior esquerdo */}
       <div className="logo-container">
         <img 
-          src="./assets/logo01.png" 
+          src={logoImg} 
           alt="Logo da Instituição" 
           className="institutional-logo"
         />
@@ -99,7 +101,7 @@ const Homepage = () => {
         <div className="image-half">
           <div className="image-overlay"></div>
           <img 
-            src="./assets/background.jpg" 
+            src={backgroundImg} 
             alt="Alunos utilizando computadores" 
             className="institutional-image"
           />
