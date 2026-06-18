@@ -1,8 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import "../pages/ComputersPage.css";
 
 // Header for ComputersPage
 function ComputersHeader({ labName, onOpenModal, onLogout, onOpenSchedule }) {
+  const navigate = useNavigate();
+
   return (
     <header className="main-header">
       <div className="header-container">
@@ -18,7 +21,7 @@ function ComputersHeader({ labName, onOpenModal, onLogout, onOpenSchedule }) {
           </button>
         </div>
         <div className="header-right">
-          <button className="btn-add" onClick={() => window.location.href = '/tickets'}>
+          <button className="btn-add" onClick={() => navigate('/tickets')}>
             Chamado <i className="fas fa-plus"></i>
           </button>
           <button className="btn-add" onClick={onOpenModal}>
