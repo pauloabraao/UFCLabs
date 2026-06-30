@@ -14,11 +14,6 @@ const Program = db.define('Program', {
   version: {
     type: DataTypes.STRING(50),
     allowNull: false
-  },
-  active: { //Nova coluna adicionada ao banco na tabela de programas
-    type: DataTypes.BOOLEAN,
-    defaultValue: true,
-    allowNull: false
   }
 }, {
   tableName: 'Program',
