@@ -33,9 +33,7 @@ const validateProgramData = (name, version) => {
  */
 export const getAllPrograms = async (req, res) => {
   try {
-    const programs = await Program.findAll({
-      where: { active: true }
-    });
+    const programs = await Program.findAll();
     res.json(programs);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -93,16 +91,12 @@ export const createProgram = async (req, res) => {
     });
 
     if (existingProgram) {
-      if (!existingProgram.active) {
-         return res.status(409).json({ error: 'Um programa com este nome e versão já existe, mas foi removido.' });
-      }
-      return res.status(409).json({ error: 'Já existe um programa ativo com este nome e versão.' });
+      return res.status(409).json({ error: 'Já existe um programa com este nome e versão.' });
     }
 
-    const newProgram = await Program.create({ 
-      name: name.trim(), 
-      version: version.trim(),
-      active: true 
+    const newProgram = await Program.create({
+      name: name.trim(),
+      version: version.trim()
     });
     res.status(201).json(newProgram);
   } catch (error) {
@@ -140,7 +134,7 @@ export const createProgram = async (req, res) => {
 export const getProgramById = async (req, res) => {
   try {
     const program = await Program.findByPk(req.params.id);
-    if (!program || !program.active) {
+    if (!program) {
       return res.status(404).json({ error: 'Program not found' });
     }
     res.json(program);
@@ -205,11 +199,11 @@ export const updateProgram = async (req, res) => {
     }
 
     const program = await Program.findByPk(req.params.id);
-    if (!program || !program.active) {
+    if (!program) {
       return res.status(404).json({ error: 'Program not found' });
     }
 
-    const existingProgram = await Program.findOne({ 
+    const existingProgram = await Program.findOne({
       where: { name: name.trim(), version: version.trim() } 
     });
 
@@ -258,12 +252,11 @@ export const updateProgram = async (req, res) => {
 export const deleteProgram = async (req, res) => {
   try {
     const program = await Program.findByPk(req.params.id);
-    if (!program || !program.active) {
+    if (!program) {
       return res.status(404).json({ error: 'Program not found' });
     }
-    
-    // Soft delete: apenas atualiza o status active para false
-    await program.update({ active: false });
+
+    await program.destroy();
     res.json({ message: 'Program deleted' });
   } catch (error) {
     res.status(500).json({ error: error.message });
